@@ -1,9 +1,12 @@
-import * as React from 'react';
+import React, { useState } from 'react';
 import axios from 'axios';
-import querystring from 'querystring'
+import { useDispatch, useSelector } from 'react-redux';
+import { addBird, incrementBird } from './store/birds/birds';
+import querystring from 'querystring';
 import HelloWorld from './HelloWorld';
 import StickyFooter from './StickyFooter';
 import './App.css';
+import User from './component/user';
 
 import CssBaseline from '@mui/material/CssBaseline';
 import Box from '@mui/material/Box';
@@ -44,65 +47,6 @@ import InputAdornment from '@mui/material/InputAdornment';
 import AccountCircle from '@mui/icons-material/AccountCircle';
 import Grid from '@mui/material/Grid';
 
-const columns = [
-  { field: 'id', headerName: 'ID', width: 70 },
-  { field: 'firstName', headerName: 'First name', width: 130 },
-  { field: 'lastName', headerName: 'Last name', width: 130 },
-  {
-    field: 'age',
-    headerName: 'Age',
-    type: 'number',
-    width: 90,
-  },
-  {
-    field: 'fullName',
-    headerName: 'Full name',
-    description: 'This column has a value getter and is not sortable.',
-    sortable: false,
-    width: 160,
-    valueGetter: (params) =>
-      `${params.getValue(params.id, 'firstName') || ''} ${
-        params.getValue(params.id, 'lastName') || ''
-      }`,
-  },
-  {
-    field: "action",
-    headerName: "Action",
-    sortable: false,
-    renderCell: (params) => {
-      return <AlertDialog />;
-    }
-  },
-];
-
-const rows = [
-  { id: 1, lastName: 'Snow', firstName: 'Jon', age: 35 },
-  { id: 2, lastName: 'Lannister', firstName: 'Cersei', age: 42 },
-  { id: 3, lastName: 'Lannister', firstName: 'Jaime', age: 45 },
-  { id: 4, lastName: 'Stark', firstName: 'Arya', age: 16 },
-  { id: 5, lastName: 'Targaryen', firstName: 'Daenerys', age: null },
-  { id: 6, lastName: 'Melisandre', firstName: null, age: 150 },
-  { id: 7, lastName: 'Clifford', firstName: 'Ferrara', age: 44 },
-  { id: 8, lastName: 'Frances', firstName: 'Rossini', age: 36 },
-  { id: 9, lastName: 'Roxie', firstName: 'Harvey', age: 65 },
-  { id: 10, lastName: 'Jeday', firstName: 'Achraf', age: 35 },
-  { id: 11, lastName: 'Jeday', firstName: 'Ahmed', age: 87 },
-  { id: 12, lastName: 'Jeday', firstName: 'Wassim', age: 43 },
-];
-
-function Copyright() {
-  return (
-    <Typography variant="body2" color="text.secondary">
-      {'Copyright © '}
-      <Link color="inherit" href="https://www.passwordlocker.me/">
-        Password Locker
-      </Link>{' '}
-      {new Date().getFullYear()}
-      {'.'}
-    </Typography>
-  );
-}
-
 function AlertDialog() {
 
   const [name, setName] = React.useState("");
@@ -124,27 +68,28 @@ function AlertDialog() {
       password: "SuperSecret123&"
   };
 
+  const {access_token} = useSelector(state => state.access_token);
+
   const handleClickOpen = async () => {
     try {
-      // Make the first request
-      const firstResponse = await axios.post('http://dev.passwordlocker.loc/oauth/token', querystring.stringify(data));
-      // Get the access token
-      var access_token = firstResponse.data.access_token;
+      // // Make the first request
+      // const firstResponse = await axios.post('http://dev.passwordlocker.loc/oauth/token', querystring.stringify(data));
+      // // Get the access token
+      // var access_token = firstResponse.data.access_token;
       const instance = axios.create({
         baseURL: 'http://dev.passwordlocker.loc/',
         timeout: 1000,
         headers: {'Authorization': 'Bearer ' + access_token}
       });
       // Make the second request
-      const secondResponse = await instance.get('/api/json/password/password/e53b64be-a1f6-4ebe-8f21-98de63e7d46e');
-      setName(secondResponse.data.data.attributes.name);
-      setUserId(secondResponse.data.data.attributes.field_user_id);
-      setPassword(secondResponse.data.data.attributes.field_password);
-      setLink(secondResponse.data.data.attributes.field_link.uri);
-      setEmail(secondResponse.data.data.attributes.field_email);
-      setMetatag(secondResponse.data.data.attributes.metatag);
-      setNotes(secondResponse.data.data.attributes.field_notes);
-      console.log(secondResponse.data.data.attributes);
+      const secondResponse = await instance.get('/api/json/password/e53b64be-a1f6-4ebe-8f21-98de63e7d46e');
+      setName(secondResponse.data.data.attributes.name ?? '');
+      setUserId(secondResponse.data.data.attributes.field_user_id ?? '');
+      setPassword(secondResponse.data.data.attributes.field_password ?? '');
+      setLink(secondResponse.data.data.attributes.field_link.uri ?? '');
+      setEmail(secondResponse.data.data.attributes.field_email ?? '');
+      setMetatag(secondResponse.data.data.attributes.metatag ?? '');
+      setNotes(secondResponse.data.data.attributes.field_notes ?? '');
     } catch (error) {
       console.log(error);
     }
@@ -218,7 +163,6 @@ function AlertDialog() {
                     size="small"
                     multiline
                     rows={8}
-                    maxRows={10}
                     value={notes}
                   />
                 </Grid>
@@ -237,52 +181,52 @@ function AlertDialog() {
   );
 }
 
-class App extends React.Component {
+function App() {
 
-    constructor(props) {
-        super(props);
-        this.state = {
-            data: 'Data from parent',
-            test: 'test Data from parent'
-        }
-    }
+      const columns = [
+        { field: 'id', headerName: 'ID', width: 70 },
+        { field: 'firstName', headerName: 'First name', width: 130 },
+        { field: 'lastName', headerName: 'Last name', width: 130 },
+        {
+          field: 'age',
+          headerName: 'Age',
+          type: 'number',
+          width: 90,
+        },
+        {
+          field: 'fullName',
+          headerName: 'Full name',
+          description: 'This column has a value getter and is not sortable.',
+          sortable: false,
+          width: 160,
+          valueGetter: (params) =>
+            `${params.getValue(params.id, 'firstName') || ''} ${
+              params.getValue(params.id, 'lastName') || ''
+            }`,
+        },
+        {
+          field: "action",
+          headerName: "Action",
+          sortable: false,
+          renderCell: (params) => {
+            return <AlertDialog />;
+          }
+        },
+      ];
 
-    async componentDidMount() {
-
-        const data = {
-            grant_type: "password",
-            client_id: "4520791a-1ce0-4dfe-9f50-a6e7beb6c318",
-            client_secret: "SuperSecret123&",
-            scope: "customer",
-            username: "test1",
-            password: "SuperSecret123&"
-        };
-
-        // Make the first request
-        const firstResponse = await axios.post('http://dev.passwordlocker.loc/oauth/token', querystring.stringify(data));
-
-        // Get the access token
-        var access_token = firstResponse.data.access_token;
-
-        const instance = axios.create({
-          baseURL: 'http://dev.passwordlocker.loc/',
-          timeout: 1000,
-          headers: {'Authorization': 'Bearer ' + access_token}
-        });
-
-        // Make the second request
-        const secondResponse = await instance.get('/api/json/password/password/e53b64be-a1f6-4ebe-8f21-98de63e7d46e');
-        // console.log(secondResponse.data);
-
-        this.setState({
-            access_token: access_token,
-        });
-
-    }
-
-    render() {
-
-      const {test} = this.state;
+      const rows = [
+        { id: 2, lastName: 'Lannister', firstName: 'Cersei', age: 18 },
+        { id: 3, lastName: 'Lannister', firstName: 'Jaime', age: 45 },
+        { id: 4, lastName: 'Stark', firstName: 'Arya', age: 16 },
+        { id: 5, lastName: 'Targaryen', firstName: 'Daenerys', age: null },
+        { id: 6, lastName: 'Melisandre', firstName: null, age: 150 },
+        { id: 7, lastName: 'Clifford', firstName: 'Ferrara', age: 44 },
+        { id: 8, lastName: 'Frances', firstName: 'Rossini', age: 36 },
+        { id: 9, lastName: 'Roxie', firstName: 'Harvey', age: 65 },
+        { id: 10, lastName: 'Jeday', firstName: 'Achraf', age: 35 },
+        { id: 11, lastName: 'Jeday', firstName: 'Ahmed', age: 87 },
+        { id: 12, lastName: 'Jeday', firstName: 'Wassim', age: 43 },
+      ];
 
       return (
         <div className = "App" >
@@ -294,6 +238,7 @@ class App extends React.Component {
                 minHeight: '100vh',
               }}
             >
+              <User />
               <br />
               <br />
               <div
@@ -318,12 +263,11 @@ class App extends React.Component {
               </div>
               <br />
               <br />
-              <StickyFooter dataParentToChild = {test} />
+              <StickyFooter />
             </Box>
           </React.Fragment>
         </div>
       );
-    }
 
 }
 
