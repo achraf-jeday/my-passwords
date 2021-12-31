@@ -1,18 +1,17 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { useDispatch, useSelector } from 'react-redux';
-import { addBird, incrementBird } from './store/birds/birds';
 import querystring from 'querystring';
 import HelloWorld from './HelloWorld';
 import StickyFooter from './StickyFooter';
+import SimpleBackdrop from './SimpleBackdrop';
+import SignIn from './SignIn';
 import './App.css';
-import User from './component/user';
 
 import CssBaseline from '@mui/material/CssBaseline';
 import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
 import Container from '@mui/material/Container';
-import Link from '@mui/material/Link';
 import { DataGrid, GridColDef, GridApi, GridCellValue } from '@mui/x-data-grid';
 
 import { styled } from '@mui/material/styles';
@@ -30,7 +29,6 @@ import FormControlLabel from '@mui/material/FormControlLabel';
 import InputLabel from '@mui/material/InputLabel';
 import MenuItem from '@mui/material/MenuItem';
 import Select from '@mui/material/Select';
-import Switch from '@mui/material/Switch';
 
 import ListItemText from '@mui/material/ListItemText';
 import ListItem from '@mui/material/ListItem';
@@ -59,29 +57,15 @@ function AlertDialog() {
 
   const [open, setOpen] = React.useState(false);
 
-  const data = {
-      grant_type: "password",
-      client_id: "4520791a-1ce0-4dfe-9f50-a6e7beb6c318",
-      client_secret: "SuperSecret123&",
-      scope: "customer",
-      username: "test1",
-      password: "SuperSecret123&"
-  };
-
   const {access_token} = useSelector(state => state.access_token);
 
   const handleClickOpen = async () => {
     try {
-      // // Make the first request
-      // const firstResponse = await axios.post('http://dev.passwordlocker.loc/oauth/token', querystring.stringify(data));
-      // // Get the access token
-      // var access_token = firstResponse.data.access_token;
       const instance = axios.create({
         baseURL: 'http://dev.passwordlocker.loc/',
         timeout: 1000,
         headers: {'Authorization': 'Bearer ' + access_token}
       });
-      // Make the second request
       const secondResponse = await instance.get('/api/json/password/e53b64be-a1f6-4ebe-8f21-98de63e7d46e');
       setName(secondResponse.data.data.attributes.name ?? '');
       setUserId(secondResponse.data.data.attributes.field_user_id ?? '');
@@ -228,6 +212,12 @@ function App() {
         { id: 12, lastName: 'Jeday', firstName: 'Wassim', age: 43 },
       ];
 
+      const [loggedIn, setLoggedIn] = useState();
+
+      if(!loggedIn) {
+        return <SignIn setLoggedIn={setLoggedIn} />
+      }
+
       return (
         <div className = "App" >
           <React.Fragment>
@@ -238,31 +228,33 @@ function App() {
                 minHeight: '100vh',
               }}
             >
-              <User />
-              <br />
-              <br />
-              <div
-                style={{
-                    display: 'flex',
-                    justifyContent: 'center'
-                }}
-              >
+              <div className="wrapper">
+                <h1>Application</h1>
+                <br />
+                <br />
                 <div
                   style={{
-                      height: 650,
-                      width: '50%'
+                      display: 'flex',
+                      justifyContent: 'center'
                   }}
                 >
-                  <DataGrid
-                    rows={rows}
-                    columns={columns}
-                    pageSize={10}
-                    rowsPerPageOptions={[10]}
-                  />
+                  <div
+                    style={{
+                        height: 650,
+                        width: '50%'
+                    }}
+                  >
+                    <DataGrid
+                      rows={rows}
+                      columns={columns}
+                      pageSize={10}
+                      rowsPerPageOptions={[10]}
+                    />
+                  </div>
                 </div>
+                <br />
+                <br />
               </div>
-              <br />
-              <br />
               <StickyFooter />
             </Box>
           </React.Fragment>

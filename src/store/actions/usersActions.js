@@ -14,11 +14,11 @@ export const getAccessToken = () => async dispatch => {
     };
 
     try {
-        const response = await axios.post(`http://dev.passwordlocker.loc/oauth/token`, querystring.stringify(data))
+        const response = await axios.post(`http://dev.passwordlocker.loc/oauth/token`, querystring.stringify(data));
         dispatch( {
             type: GET_TOKEN,
             payload: response.data.access_token
-        })
+        });
     }
     catch(e) {
         dispatch( {

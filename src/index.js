@@ -4,10 +4,6 @@ import './index.css';
 import App from './App';
 import reportWebVitals from './reportWebVitals';
 import { Provider } from 'react-redux';
-import { createStore } from 'redux';
-import birdApp from './store/birds/birds';
-import axios from 'axios';
-import querystring from 'querystring';
 import store from './store/store';
 
 ReactDOM.render(
