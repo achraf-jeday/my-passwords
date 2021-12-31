@@ -24,18 +24,15 @@ import PropTypes from 'prop-types';
 
 const theme = createTheme();
 
-export function SignIn({ setLoggedIn }) {
-
-  const [username, setUserName] = useState();
-  const [password, setPassword] = useState();
-  const dispatch = useDispatch();
-
-  const handleSubmit = async event => {
+export default function ResetPassword() {
+  const handleSubmit = (event) => {
     event.preventDefault();
     const data = new FormData(event.currentTarget);
-    await dispatch(getAccessToken(data.get('email'), data.get('password')));
-    setLoggedIn(true);
-  }
+    // eslint-disable-next-line no-console
+    console.log({
+      "user id and email": data.get('user-id-email'),
+    });
+  };
 
   return (
     <ThemeProvider theme={theme}>
@@ -53,34 +50,19 @@ export function SignIn({ setLoggedIn }) {
             <LockOutlinedIcon />
           </Avatar>
           <Typography component="h1" variant="h5">
-            Sign in
+            Reset your password
           </Typography>
           <Box component="form" onSubmit={handleSubmit} noValidate sx={{ mt: 1 }}>
             <TextField
               margin="normal"
               required
               fullWidth
-              id="email"
-              label="Email Address"
-              name="email"
-              autoComplete="email"
+              id="user-id-email"
+              label="User id or email"
+              name="user-id-email"
+              autoComplete="user-id-email"
               autoFocus
               onChange={e => setUserName(e.target.value)}
-            />
-            <TextField
-              margin="normal"
-              required
-              fullWidth
-              name="password"
-              label="Password"
-              type="password"
-              id="password"
-              autoComplete="current-password"
-              onChange={e => setPassword(e.target.value)}
-            />
-            <FormControlLabel
-              control={<Checkbox value="remember" color="primary" />}
-              label="Remember me"
             />
             <Button
               type="submit"
@@ -88,32 +70,12 @@ export function SignIn({ setLoggedIn }) {
               variant="contained"
               sx={{ mt: 3, mb: 2 }}
             >
-              Sign In
+              Send
             </Button>
-            <Grid container>
-              <Grid item xs>
-                <Link href="reset-password" variant="body2">
-                  Forgot password?
-                </Link>
-              </Grid>
-              <Grid item>
-                <Link href="sign-up" variant="body2">
-                  {"Don't have an account? Sign Up"}
-                </Link>
-              </Grid>
-            </Grid>
           </Box>
         </Box>
         <Copyright sx={{ mt: 8, mb: 4 }} />
       </Container>
     </ThemeProvider>
   );
-}
-
-const mapStateToProps  = (state) => ({access_token:state.access_token})
-
-export default connect(mapStateToProps)(SignIn)
-
-SignIn.propTypes = {
-  setLoggedIn: PropTypes.func.isRequired
 }

@@ -5,6 +5,7 @@ import querystring from 'querystring';
 import HelloWorld from './HelloWorld';
 import StickyFooter from './StickyFooter';
 import SignIn from './SignIn';
+import useLoggedIn from './useLoggedIn';
 import './App.css';
 
 import CssBaseline from '@mui/material/CssBaseline';
@@ -211,7 +212,7 @@ function App() {
         { id: 12, lastName: 'Jeday', firstName: 'Wassim', age: 43 },
       ];
 
-      const [loggedIn, setLoggedIn] = useState();
+      const { loggedIn, setLoggedIn } = useLoggedIn();
 
       if(!loggedIn) {
         return <SignIn setLoggedIn={setLoggedIn} />
