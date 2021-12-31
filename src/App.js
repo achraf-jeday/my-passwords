@@ -4,7 +4,6 @@ import { useDispatch, useSelector } from 'react-redux';
 import querystring from 'querystring';
 import HelloWorld from './HelloWorld';
 import StickyFooter from './StickyFooter';
-import SimpleBackdrop from './SimpleBackdrop';
 import SignIn from './SignIn';
 import './App.css';
 

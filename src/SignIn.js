@@ -63,9 +63,10 @@ export function SignIn({ setLoggedIn }) {
   const [username, setUserName] = useState();
   const [password, setPassword] = useState();
 
-  const handleSubmit = async e => {
-    e.preventDefault();
-    await dispatch(getAccessToken());
+  const handleSubmit = async event => {
+    event.preventDefault();
+    const data = new FormData(event.currentTarget);
+    await dispatch(getAccessToken(data.get('email'), data.get('password')));
     setLoggedIn(true);
   }
 
