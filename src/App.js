@@ -5,7 +5,6 @@ import querystring from 'querystring';
 import HelloWorld from './HelloWorld';
 import StickyFooter from './StickyFooter';
 import SignIn from './SignIn';
-import useLoggedIn from './useLoggedIn';
 import './App.css';
 
 import CssBaseline from '@mui/material/CssBaseline';
@@ -66,7 +65,7 @@ function AlertDialog() {
         timeout: 1000,
         headers: {'Authorization': 'Bearer ' + access_token}
       });
-      const secondResponse = await instance.get('/api/json/password/e53b64be-a1f6-4ebe-8f21-98de63e7d46e');
+      const secondResponse = await instance.get('/api/json/password/4aad4eb6-2a3d-4aa7-a655-72362e1ea6aa');
       setName(secondResponse.data.data.attributes.name ?? '');
       setUserId(secondResponse.data.data.attributes.field_user_id ?? '');
       setPassword(secondResponse.data.data.attributes.field_password ?? '');
@@ -212,7 +211,7 @@ function App() {
         { id: 12, lastName: 'Jeday', firstName: 'Wassim', age: 43 },
       ];
 
-      const { loggedIn, setLoggedIn } = useLoggedIn();
+      const [loggedIn, setLoggedIn] = useState();
 
       if(!loggedIn) {
         return <SignIn setLoggedIn={setLoggedIn} />
