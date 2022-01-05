@@ -1,5 +1,6 @@
 import { GET_TOKEN, TOKEN_ERROR } from '../types';
 import { GET_CSRF_TOKEN, CSRF_TOKEN_ERROR } from '../types';
+import { REGISTER_USER, REGISTER_USER_ERROR } from '../types';
 import axios from 'axios';
 import querystring from 'querystring';
 
@@ -42,6 +43,43 @@ export const getCSRFToken = () => async dispatch => {
     catch(e) {
         dispatch( {
             type: CSRF_TOKEN_ERROR,
+            payload: console.log(e),
+        })
+    }
+
+}
+
+export const registerUser = (name, mail, csrf) => async dispatch => {
+
+    const data = JSON.stringify({
+      "name": {
+        "value": name
+      },
+      "mail": {
+        "value": mail
+      },
+      "pass": {
+        "value": "SuperSecret123&"
+      }
+    });
+
+    let config = {
+        headers: {
+            'Content-type': 'application/json',
+            'X-CSRF-Token': csrf
+        }
+    }
+
+    try {
+        const response = await axios.post(`http://dev.passwordlocker.loc/user/register?_format=json`, data, config);
+        dispatch( {
+            type: REGISTER_USER,
+            payload: response
+        });
+    }
+    catch(e) {
+        dispatch( {
+            type: REGISTER_USER_ERROR,
             payload: console.log(e),
         })
     }

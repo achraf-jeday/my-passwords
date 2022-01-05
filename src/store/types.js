@@ -4,3 +4,5 @@ export const GET_TOKEN = 'GET_TOKEN';
 export const TOKEN_ERROR = 'TOKEN_ERROR';
 export const GET_CSRF_TOKEN = 'GET_CSRF_TOKEN';
 export const CSRF_TOKEN_ERROR = 'CSRF_TOKEN_ERROR';
+export const REGISTER_USER = 'REGISTER_USER';
+export const REGISTER_USER_ERROR = 'REGISTER_USER_ERROR';

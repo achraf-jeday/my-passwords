@@ -14,7 +14,7 @@ import Typography from '@mui/material/Typography';
 import Container from '@mui/material/Container';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import Copyright from './Copyright';
-import { getCSRFToken } from './store/actions/usersActions';
+import { getCSRFToken, registerUser } from './store/actions/usersActions';
 import PropTypes from 'prop-types';
 
 const theme = createTheme();
@@ -26,7 +26,8 @@ export function SignUp() {
   const handleSubmit = async event => {
     event.preventDefault();
     const data = new FormData(event.currentTarget);
-    await dispatch(getCSRFToken());
+    var csrf = await dispatch(getCSRFToken());
+    await dispatch(registerUser(data.get('user-id'), data.get('email')), csrf);
   };
 
   return (
@@ -59,7 +60,7 @@ export function SignUp() {
                   autoComplete="user-id"
                 />
               </Grid>
-              <Grid item xs={12}>
+{/*              <Grid item xs={12}>
                 <TextField
                   required
                   fullWidth
@@ -102,7 +103,7 @@ export function SignUp() {
                   id="retype-packing-key"
                   autoComplete="retype-packing-key"
                 />
-              </Grid>
+              </Grid>*/}
               <Grid item xs={12}>
                 <TextField
                   required
