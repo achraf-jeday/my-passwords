@@ -1,5 +1,6 @@
 import * as React from 'react';
 import { useDispatch, connect } from 'react-redux';
+import { useSearchParams } from 'react-router-dom';
 import Avatar from '@mui/material/Avatar';
 import Button from '@mui/material/Button';
 import CssBaseline from '@mui/material/CssBaseline';
@@ -14,21 +15,23 @@ import Typography from '@mui/material/Typography';
 import Container from '@mui/material/Container';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import Copyright from './Copyright';
-import { getCSRFToken, registerUser, registerEmail } from './store/actions/usersActions';
+import { resetPass } from './store/actions/usersActions';
 import PropTypes from 'prop-types';
 
 const theme = createTheme();
 
-export function SignUp() {
+export function SetPassword() {
 
   const dispatch = useDispatch();
+
+  const [searchParams, setSearchParams] = useSearchParams();
+  var name = searchParams.get("name")
+  var pass = searchParams.get("pass")
 
   const handleSubmit = async event => {
     event.preventDefault();
     const data = new FormData(event.currentTarget);
-    var csrf = await dispatch(getCSRFToken());
-    await dispatch(registerUser(data.get('user-id'), data.get('email')), csrf);
-    await dispatch(registerEmail(data.get('email')));
+    await dispatch(resetPass(name, pass, data.get('password')));
   };
 
   return (
@@ -47,21 +50,23 @@ export function SignUp() {
             <LockOutlinedIcon />
           </Avatar>
           <Typography component="h1" variant="h5">
-            Sign up
+            Set your password
           </Typography>
           <Box component="form" noValidate onSubmit={handleSubmit} sx={{ mt: 3 }}>
             <Grid container spacing={2}>
               <Grid item xs={12}>
                 <TextField
+                  value={name}
                   required
                   fullWidth
                   id="user-id"
                   label="User ID"
                   name="user-id"
                   autoComplete="user-id"
+                  disabled={true}
                 />
               </Grid>
-{/*              <Grid item xs={12}>
+              <Grid item xs={12}>
                 <TextField
                   required
                   fullWidth
@@ -83,38 +88,6 @@ export function SignUp() {
                   autoComplete="retype-password"
                 />
               </Grid>
-              <Grid item xs={12}>
-                <TextField
-                  required
-                  fullWidth
-                  name="packing-key"
-                  label="Packing key"
-                  type="password"
-                  id="packing-key"
-                  autoComplete="packing-key"
-                />
-              </Grid>
-              <Grid item xs={12}>
-                <TextField
-                  required
-                  fullWidth
-                  name="retype-packing-key"
-                  label="Retype packing key"
-                  type="password"
-                  id="retype-packing-key"
-                  autoComplete="retype-packing-key"
-                />
-              </Grid>*/}
-              <Grid item xs={12}>
-                <TextField
-                  required
-                  fullWidth
-                  id="email"
-                  label="Email Address"
-                  name="email"
-                  autoComplete="email"
-                />
-              </Grid>
             </Grid>
             <Button
               type="submit"
@@ -122,15 +95,8 @@ export function SignUp() {
               variant="contained"
               sx={{ mt: 3, mb: 2 }}
             >
-              Sign Up
+              Save
             </Button>
-            <Grid container justifyContent="flex-end">
-              <Grid item>
-                <Link href="/" variant="body2">
-                  Already have an account? Sign in
-                </Link>
-              </Grid>
-            </Grid>
           </Box>
         </Box>
         <Copyright sx={{ mt: 5 }} />
@@ -141,4 +107,4 @@ export function SignUp() {
 
 const mapStateToProps  = (state) => ({user_state:state.user_state})
 
-export default connect(mapStateToProps)(SignUp)
+export default connect(mapStateToProps)(SetPassword)

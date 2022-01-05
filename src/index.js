@@ -7,6 +7,7 @@ import reportWebVitals from './reportWebVitals';
 import { Provider } from 'react-redux';
 import store from './store/store';
 import SignUp from './SignUp';
+import SetPassword from './SetPassword';
 import ResetPassword from './ResetPassword';
 
 import {
@@ -22,6 +23,7 @@ ReactDOM.render(
       <Routes>
         <Route path="/" element={<App />} />
         <Route path="sign-up" element={<SignUp />} />
+        <Route path="set-password" element={<SetPassword />} />
         <Route path="reset-password" element={<ResetPassword />} />
       </Routes>
     </BrowserRouter>

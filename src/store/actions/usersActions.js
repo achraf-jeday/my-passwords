@@ -1,6 +1,8 @@
 import { GET_TOKEN, TOKEN_ERROR } from '../types';
 import { GET_CSRF_TOKEN, CSRF_TOKEN_ERROR } from '../types';
-import { REGISTER_USER, REGISTER_USER_ERROR } from '../types';
+import { REGISTER, REGISTER_ERROR } from '../types';
+import { REGISTER_EMAIL, REGISTER_EMAIL_ERROR } from '../types';
+import { RESET_PASSWORD, RESET_PASSWORD_ERROR } from '../types';
 import axios from 'axios';
 import querystring from 'querystring';
 
@@ -73,13 +75,71 @@ export const registerUser = (name, mail, csrf) => async dispatch => {
     try {
         const response = await axios.post(`http://dev.passwordlocker.loc/user/register?_format=json`, data, config);
         dispatch( {
-            type: REGISTER_USER,
+            type: REGISTER,
             payload: response
         });
     }
     catch(e) {
         dispatch( {
-            type: REGISTER_USER_ERROR,
+            type: REGISTER_ERROR,
+            payload: console.log(e),
+        })
+    }
+
+}
+
+export const registerEmail = (mail) => async dispatch => {
+
+    const data = JSON.stringify({
+        "mail": mail
+    });
+
+    let config = {
+        headers: {
+            'Content-type': 'application/json'
+        }
+    }
+
+    try {
+        const response = await axios.post(`http://dev.passwordlocker.loc/user/lost-password?_format=json`, data, config);
+        dispatch( {
+            type: REGISTER_EMAIL,
+            payload: response
+        });
+    }
+    catch(e) {
+        dispatch( {
+            type: REGISTER_EMAIL_ERROR,
+            payload: console.log(e),
+        })
+    }
+
+}
+
+export const resetPass = (name, temp_pass, new_pass) => async dispatch => {
+
+    const data = JSON.stringify({
+        "name": name,
+        "temp_pass": temp_pass,
+        "new_pass": new_pass
+    });
+
+    let config = {
+        headers: {
+            'Content-type': 'application/json'
+        }
+    }
+
+    try {
+        const response = await axios.post(`http://dev.passwordlocker.loc/user/lost-password-reset?_format=json`, data, config);
+        dispatch( {
+            type: RESET_PASSWORD,
+            payload: response
+        });
+    }
+    catch(e) {
+        dispatch( {
+            type: RESET_PASSWORD_ERROR,
             payload: console.log(e),
         })
     }
