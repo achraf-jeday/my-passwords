@@ -1,4 +1,5 @@
 import * as React from 'react';
+import { useDispatch, connect } from 'react-redux';
 import Avatar from '@mui/material/Avatar';
 import Button from '@mui/material/Button';
 import CssBaseline from '@mui/material/CssBaseline';
@@ -13,18 +14,19 @@ import Typography from '@mui/material/Typography';
 import Container from '@mui/material/Container';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import Copyright from './Copyright';
+import { getCSRFToken } from './store/actions/usersActions';
+import PropTypes from 'prop-types';
 
 const theme = createTheme();
 
-export default function SignUp() {
-  const handleSubmit = (event) => {
+export function SignUp() {
+
+  const dispatch = useDispatch();
+
+  const handleSubmit = async event => {
     event.preventDefault();
     const data = new FormData(event.currentTarget);
-    // eslint-disable-next-line no-console
-    console.log({
-      email: data.get('email'),
-      password: data.get('password'),
-    });
+    await dispatch(getCSRFToken());
   };
 
   return (
@@ -134,3 +136,7 @@ export default function SignUp() {
     </ThemeProvider>
   );
 }
+
+const mapStateToProps  = (state) => ({user_state:state.user_state})
+
+export default connect(mapStateToProps)(SignUp)

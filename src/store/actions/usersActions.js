@@ -1,4 +1,5 @@
 import { GET_TOKEN, TOKEN_ERROR } from '../types';
+import { GET_CSRF_TOKEN, CSRF_TOKEN_ERROR } from '../types';
 import axios from 'axios';
 import querystring from 'querystring';
 
@@ -23,6 +24,24 @@ export const getAccessToken = (email, password) => async dispatch => {
     catch(e) {
         dispatch( {
             type: TOKEN_ERROR,
+            payload: console.log(e),
+        })
+    }
+
+}
+
+export const getCSRFToken = () => async dispatch => {
+
+    try {
+        const response = await axios.get(`http://dev.passwordlocker.loc/session/token`);
+        dispatch( {
+            type: GET_CSRF_TOKEN,
+            payload: response.data
+        });
+    }
+    catch(e) {
+        dispatch( {
+            type: CSRF_TOKEN_ERROR,
             payload: console.log(e),
         })
     }

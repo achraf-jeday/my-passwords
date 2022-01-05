@@ -32,6 +32,6 @@ import CircularProgress from '@mui/material/CircularProgress';
     }
 }
 
-const mapStateToProps  = (state) => ({access_token:state.access_token})
+const mapStateToProps  = (state) => ({user_state:state.user_state})
 
 export default connect(mapStateToProps, {getAccessToken})(user)

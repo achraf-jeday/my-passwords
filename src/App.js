@@ -56,14 +56,14 @@ function AlertDialog() {
 
   const [open, setOpen] = React.useState(false);
 
-  const {access_token} = useSelector(state => state.access_token);
+  const {user_state} = useSelector(state => state.user_state);
 
   const handleClickOpen = async () => {
     try {
       const instance = axios.create({
         baseURL: 'http://dev.passwordlocker.loc/',
         timeout: 1000,
-        headers: {'Authorization': 'Bearer ' + access_token}
+        headers: {'Authorization': 'Bearer ' + user_state}
       });
       const secondResponse = await instance.get('/api/json/password/4aad4eb6-2a3d-4aa7-a655-72362e1ea6aa');
       setName(secondResponse.data.data.attributes.name ?? '');

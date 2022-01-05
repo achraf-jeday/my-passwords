@@ -110,7 +110,7 @@ export function SignIn({ setLoggedIn }) {
   );
 }
 
-const mapStateToProps  = (state) => ({access_token:state.access_token})
+const mapStateToProps  = (state) => ({user_state:state.user_state})
 
 export default connect(mapStateToProps)(SignIn)
 
