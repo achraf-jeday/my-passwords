@@ -6,7 +6,6 @@ import HelloWorld from './HelloWorld';
 import StickyFooter from './StickyFooter';
 import SignIn from './SignIn';
 import ResponsiveAppBar from './ResponsiveAppBar';
-import AccountMenu from './AccountMenu';
 import './App.css';
 
 import CssBaseline from '@mui/material/CssBaseline';
@@ -229,8 +228,7 @@ function App() {
                 minHeight: '100vh',
               }}
             >
-            <ResponsiveAppBar />
-            <AccountMenu setLoggedIn={setLoggedIn} />
+            <ResponsiveAppBar setLoggedIn={setLoggedIn} />
               <div className="wrapper">
                 <br />
                 <br />
