@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { useDispatch, connect } from 'react-redux';
-import { useSearchParams } from 'react-router-dom';
+import { useSearchParams, useNavigate } from 'react-router-dom';
 import Avatar from '@mui/material/Avatar';
 import Button from '@mui/material/Button';
 import CssBaseline from '@mui/material/CssBaseline';
@@ -23,6 +23,7 @@ const theme = createTheme();
 export function SetPassword() {
 
   const dispatch = useDispatch();
+  let navigate = useNavigate();
 
   const [searchParams, setSearchParams] = useSearchParams();
   var name = searchParams.get("name")
@@ -32,6 +33,7 @@ export function SetPassword() {
     event.preventDefault();
     const data = new FormData(event.currentTarget);
     await dispatch(resetPass(name, pass, data.get('password')));
+    navigate("/", { replace: true });
   };
 
   return (

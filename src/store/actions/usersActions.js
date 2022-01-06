@@ -1,8 +1,4 @@
-import { GET_TOKEN, TOKEN_ERROR } from '../types';
-import { GET_CSRF_TOKEN, CSRF_TOKEN_ERROR } from '../types';
-import { REGISTER, REGISTER_ERROR } from '../types';
-import { REGISTER_EMAIL, REGISTER_EMAIL_ERROR } from '../types';
-import { RESET_PASSWORD, RESET_PASSWORD_ERROR } from '../types';
+import * as actionTypes from '../actionTypes';
 import axios from 'axios';
 import querystring from 'querystring';
 
@@ -19,18 +15,24 @@ export const getAccessToken = (email, password) => async dispatch => {
 
     try {
         const response = await axios.post(`http://dev.passwordlocker.loc/oauth/token`, querystring.stringify(data));
-        dispatch( {
-            type: GET_TOKEN,
+        dispatch({
+            type: actionTypes.GET_TOKEN,
             payload: response.data.access_token
         });
     }
     catch(e) {
-        dispatch( {
-            type: TOKEN_ERROR,
+        dispatch({
+            type: actionTypes.TOKEN_ERROR,
             payload: console.log(e),
         })
     }
 
+}
+
+export const deleteAccessToken = () => async dispatch => {
+   dispatch({
+      type: actionTypes.DELETE_TOKEN
+   })
 }
 
 export const getCSRFToken = () => async dispatch => {
@@ -38,13 +40,13 @@ export const getCSRFToken = () => async dispatch => {
     try {
         const response = await axios.get(`http://dev.passwordlocker.loc/session/token`);
         dispatch( {
-            type: GET_CSRF_TOKEN,
+            type: actionTypes.GET_CSRF_TOKEN,
             payload: response.data
         });
     }
     catch(e) {
         dispatch( {
-            type: CSRF_TOKEN_ERROR,
+            type: actionTypes.CSRF_TOKEN_ERROR,
             payload: console.log(e),
         })
     }
@@ -75,13 +77,13 @@ export const registerUser = (name, mail, csrf) => async dispatch => {
     try {
         const response = await axios.post(`http://dev.passwordlocker.loc/user/register?_format=json`, data, config);
         dispatch( {
-            type: REGISTER,
+            type: actionTypes.REGISTER,
             payload: response
         });
     }
     catch(e) {
         dispatch( {
-            type: REGISTER_ERROR,
+            type: actionTypes.REGISTER_ERROR,
             payload: console.log(e),
         })
     }
@@ -103,13 +105,13 @@ export const registerEmail = (mail) => async dispatch => {
     try {
         const response = await axios.post(`http://dev.passwordlocker.loc/user/lost-password?_format=json`, data, config);
         dispatch( {
-            type: REGISTER_EMAIL,
+            type: actionTypes.REGISTER_EMAIL,
             payload: response
         });
     }
     catch(e) {
         dispatch( {
-            type: REGISTER_EMAIL_ERROR,
+            type: actionTypes.REGISTER_EMAIL_ERROR,
             payload: console.log(e),
         })
     }
@@ -133,13 +135,13 @@ export const resetPass = (name, temp_pass, new_pass) => async dispatch => {
     try {
         const response = await axios.post(`http://dev.passwordlocker.loc/user/lost-password-reset?_format=json`, data, config);
         dispatch( {
-            type: RESET_PASSWORD,
+            type: actionTypes.RESET_PASSWORD,
             payload: response
         });
     }
     catch(e) {
         dispatch( {
-            type: RESET_PASSWORD_ERROR,
+            type: actionTypes.RESET_PASSWORD_ERROR,
             payload: console.log(e),
         })
     }

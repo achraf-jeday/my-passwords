@@ -1,4 +1,4 @@
-import { GET_TOKEN } from '../types';
+import * as actionTypes from '../actionTypes';
 
 const initialState = {
     user_state:'',
@@ -7,14 +7,14 @@ const initialState = {
 export default function user_state(state = initialState, action) {
 
     switch(action.type) {
-
-        case GET_TOKEN:
+        case actionTypes.GET_TOKEN:
         return {
             ...state,
             user_state:action.payload
-
         }
-        default: return state
+        case actionTypes.DELETE_TOKEN:
+        return initialState;
+        default: return state;
     }
 
 }

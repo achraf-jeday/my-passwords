@@ -5,6 +5,8 @@ import querystring from 'querystring';
 import HelloWorld from './HelloWorld';
 import StickyFooter from './StickyFooter';
 import SignIn from './SignIn';
+import ResponsiveAppBar from './ResponsiveAppBar';
+import AccountMenu from './AccountMenu';
 import './App.css';
 
 import CssBaseline from '@mui/material/CssBaseline';
@@ -227,8 +229,9 @@ function App() {
                 minHeight: '100vh',
               }}
             >
+            <ResponsiveAppBar />
+            <AccountMenu setLoggedIn={setLoggedIn} />
               <div className="wrapper">
-                <h1>Application</h1>
                 <br />
                 <br />
                 <div

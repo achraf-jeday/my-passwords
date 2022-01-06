@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { useDispatch, useSelector, connect } from 'react-redux';
+import PropTypes from 'prop-types';
 import { getAccessToken } from './store/actions/usersActions';
+import Copyright from './Copyright';
 
 import axios from 'axios';
 import querystring from 'querystring';
@@ -18,9 +20,6 @@ import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
 import Typography from '@mui/material/Typography';
 import Container from '@mui/material/Container';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
-import Copyright from './Copyright';
-
-import PropTypes from 'prop-types';
 
 const theme = createTheme();
 
