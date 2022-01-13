@@ -6,7 +6,7 @@ export const getAccessToken = (email, password) => async dispatch => {
 
     const data = {
         grant_type: "password",
-        client_id: "3aa7c57d-21d7-4117-974e-ab60c82a24fd",
+        client_id: "5272db5d-c7b6-45fb-a3bd-74fc66b8434a",
         client_secret: "SuperSecret123&",
         scope: "customer",
         username: email,

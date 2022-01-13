@@ -90,6 +90,28 @@ export function SetPassword() {
                   autoComplete="retype-password"
                 />
               </Grid>
+              <Grid item xs={12}>
+                <TextField
+                  required
+                  fullWidth
+                  name="packing-key"
+                  label="Packing key"
+                  type="password"
+                  id="packing-key"
+                  autoComplete="packing-key"
+                />
+              </Grid>
+              <Grid item xs={12}>
+                <TextField
+                  required
+                  fullWidth
+                  name="retype-packing-key"
+                  label="Retype packing key"
+                  type="password"
+                  id="retype-packing-key"
+                  autoComplete="retype-packing-key"
+                />
+              </Grid>
             </Grid>
             <Button
               type="submit"

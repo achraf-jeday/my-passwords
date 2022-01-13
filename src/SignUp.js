@@ -26,7 +26,7 @@ export function SignUp() {
   const handleSubmit = async event => {
     event.preventDefault();
     const data = new FormData(event.currentTarget);
-    var csrf = await dispatch(getCSRFToken());
+    // var csrf = await dispatch(getCSRFToken());
     await dispatch(registerUser(data.get('user-id'), data.get('email')), csrf);
     await dispatch(registerEmail(data.get('email')));
   };
@@ -61,50 +61,6 @@ export function SignUp() {
                   autoComplete="user-id"
                 />
               </Grid>
-{/*              <Grid item xs={12}>
-                <TextField
-                  required
-                  fullWidth
-                  name="password"
-                  label="Password"
-                  type="password"
-                  id="password"
-                  autoComplete="password"
-                />
-              </Grid>
-              <Grid item xs={12}>
-                <TextField
-                  required
-                  fullWidth
-                  name="retype-password"
-                  label="Retype Password"
-                  type="password"
-                  id="retype-password"
-                  autoComplete="retype-password"
-                />
-              </Grid>
-              <Grid item xs={12}>
-                <TextField
-                  required
-                  fullWidth
-                  name="packing-key"
-                  label="Packing key"
-                  type="password"
-                  id="packing-key"
-                  autoComplete="packing-key"
-                />
-              </Grid>
-              <Grid item xs={12}>
-                <TextField
-                  required
-                  fullWidth
-                  name="retype-packing-key"
-                  label="Retype packing key"
-                  type="password"
-                  id="retype-packing-key"
-                  autoComplete="retype-packing-key"
-                />
-              </Grid>*/}
               <Grid item xs={12}>
                 <TextField
                   required
