@@ -34,7 +34,7 @@ export function SignIn({ setLoggedIn }) {
     const data = new FormData(event.currentTarget);
     var csrf = await dispatch(getCSRFToken());
     var access_token = await dispatch(getAccessToken(data.get('email'), data.get('password')));
-    var res = await dispatch(verifyUserPackingKey(csrf, access_token));
+    await dispatch(verifyUserPackingKey(csrf, access_token));
     setLoggedIn(true);
   }
 

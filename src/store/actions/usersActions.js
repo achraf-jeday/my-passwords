@@ -74,7 +74,6 @@ export const verifyUserPackingKey = (csrf, access_token) => async dispatch => {
             type: actionTypes.VERIFY_PACKING_KEY,
             payload: response
         });
-        return response;
     }
     catch(e) {
         dispatch( {
