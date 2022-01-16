@@ -2,8 +2,8 @@ version: '3.7'
 
 services:
 
-  hello-world-prod:
-    container_name: hello-world-prod
+  my-passwords-prod:
+    container_name: my-passwords-prod
     build:
       context: .
       dockerfile: Dockerfile.prod

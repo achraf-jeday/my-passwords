@@ -2,8 +2,8 @@ version: '3.7'
 
 services:
 
-  hello-world:
-    container_name: hello-world
+  my-passwords:
+    container_name: my-passwords
     build:
       context: .
       dockerfile: Dockerfile

@@ -2,7 +2,6 @@ import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { useDispatch, useSelector } from 'react-redux';
 import querystring from 'querystring';
-import HelloWorld from './HelloWorld';
 import StickyFooter from './StickyFooter';
 import SignIn from './SignIn';
 import ResponsiveAppBar from './ResponsiveAppBar';
@@ -66,7 +65,7 @@ function AlertDialog() {
         timeout: 1000,
         headers: {'Authorization': 'Bearer ' + user_state}
       });
-      const secondResponse = await instance.get('/api/json/password/4aad4eb6-2a3d-4aa7-a655-72362e1ea6aa');
+      const secondResponse = await instance.get('/api/json/password/86776d90-421d-4132-a2b1-dcece311b17a');
       setName(secondResponse.data.data.attributes.name ?? '');
       setUserId(secondResponse.data.data.attributes.field_user_id ?? '');
       setPassword(secondResponse.data.data.attributes.field_password ?? '');
