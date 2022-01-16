@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useDispatch, useSelector, connect } from 'react-redux';
 import PropTypes from 'prop-types';
-import { getAccessToken } from './store/actions/usersActions';
+import { getCSRFToken, getAccessToken, verifyUserPackingKey } from './store/actions/usersActions';
 import Copyright from './Copyright';
 
 import axios from 'axios';
@@ -32,7 +32,10 @@ export function SignIn({ setLoggedIn }) {
   const handleSubmit = async event => {
     event.preventDefault();
     const data = new FormData(event.currentTarget);
-    await dispatch(getAccessToken(data.get('email'), data.get('password')));
+    var csrf = await dispatch(getCSRFToken());
+    var access_token = await dispatch(getAccessToken(data.get('email'), data.get('password')));
+    var res = await dispatch(verifyUserPackingKey(csrf, access_token));
+    console.log(res);
     setLoggedIn(true);
   }
 

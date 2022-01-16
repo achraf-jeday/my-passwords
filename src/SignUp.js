@@ -26,7 +26,6 @@ export function SignUp() {
   const handleSubmit = async event => {
     event.preventDefault();
     const data = new FormData(event.currentTarget);
-    // var csrf = await dispatch(getCSRFToken());
     await dispatch(registerUser(data.get('user-id'), data.get('email')), csrf);
     await dispatch(registerEmail(data.get('email')));
   };
