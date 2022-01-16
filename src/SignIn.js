@@ -35,7 +35,6 @@ export function SignIn({ setLoggedIn }) {
     var csrf = await dispatch(getCSRFToken());
     var access_token = await dispatch(getAccessToken(data.get('email'), data.get('password')));
     var res = await dispatch(verifyUserPackingKey(csrf, access_token));
-    console.log(res);
     setLoggedIn(true);
   }
 
