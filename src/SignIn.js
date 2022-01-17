@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useDispatch, useSelector, connect } from 'react-redux';
 import PropTypes from 'prop-types';
-import { getCSRFToken, getAccessToken, verifyUserPackingKey } from './store/actions/usersActions';
+import { getCSRFToken, getAccessToken, verifyUserPackingKey, getPasswordsList } from './store/actions/usersActions';
 import Copyright from './Copyright';
 
 import axios from 'axios';
@@ -35,6 +35,7 @@ export function SignIn({ setLoggedIn }) {
     var csrf = await dispatch(getCSRFToken());
     var access_token = await dispatch(getAccessToken(data.get('email'), data.get('password')));
     await dispatch(verifyUserPackingKey(csrf, access_token));
+    await dispatch(getPasswordsList(access_token));
     setLoggedIn(true);
   }
 

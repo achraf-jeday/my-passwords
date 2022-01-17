@@ -56,14 +56,14 @@ function AlertDialog() {
 
   const [open, setOpen] = React.useState(false);
 
-  const {user_state} = useSelector(state => state.user_state);
+  const user_state = useSelector(state => state.user_state);
 
   const handleClickOpen = async () => {
     try {
       const instance = axios.create({
         baseURL: 'http://dev.passwordlocker.loc/',
         timeout: 1000,
-        headers: {'Authorization': 'Bearer ' + user_state}
+        headers: {'Authorization': 'Bearer ' + user_state.access_token}
       });
       const secondResponse = await instance.get('/api/json/password/c0b3045c-621c-460a-b8ed-e9d161366cd7');
       setName(secondResponse.data.data.attributes.name ?? '');
@@ -165,101 +165,101 @@ function AlertDialog() {
 }
 
 function App() {
+  const user_state = useSelector(state => state.user_state);
 
-      const columns = [
-        { field: 'id', headerName: 'ID', width: 70 },
-        { field: 'firstName', headerName: 'First name', width: 130 },
-        { field: 'lastName', headerName: 'Last name', width: 130 },
-        {
-          field: 'age',
-          headerName: 'Age',
-          type: 'number',
-          width: 90,
-        },
-        {
-          field: 'fullName',
-          headerName: 'Full name',
-          description: 'This column has a value getter and is not sortable.',
-          sortable: false,
-          width: 160,
-          valueGetter: (params) =>
-            `${params.getValue(params.id, 'firstName') || ''} ${
-              params.getValue(params.id, 'lastName') || ''
-            }`,
-        },
-        {
-          field: "action",
-          headerName: "Action",
-          sortable: false,
-          renderCell: (params) => {
-            return <AlertDialog />;
-          }
-        },
-      ];
-
-      const rows = [
-        { id: 2, lastName: 'Lannister', firstName: 'Cersei', age: 18 },
-        { id: 3, lastName: 'Lannister', firstName: 'Jaime', age: 45 },
-        { id: 4, lastName: 'Stark', firstName: 'Arya', age: 16 },
-        { id: 5, lastName: 'Targaryen', firstName: 'Daenerys', age: null },
-        { id: 6, lastName: 'Melisandre', firstName: null, age: 150 },
-        { id: 7, lastName: 'Clifford', firstName: 'Ferrara', age: 44 },
-        { id: 8, lastName: 'Frances', firstName: 'Rossini', age: 36 },
-        { id: 9, lastName: 'Roxie', firstName: 'Harvey', age: 65 },
-        { id: 10, lastName: 'Jeday', firstName: 'Achraf', age: 35 },
-        { id: 11, lastName: 'Jeday', firstName: 'Ahmed', age: 87 },
-        { id: 12, lastName: 'Jeday', firstName: 'Wassim', age: 43 },
-      ];
-
-      const [loggedIn, setLoggedIn] = useState();
-
-      if(!loggedIn) {
-        return <SignIn setLoggedIn={setLoggedIn} />
+  const columns = [
+    { field: 'id', headerName: 'ID', width: 70 },
+    { field: 'firstName', headerName: 'First name', width: 130 },
+    { field: 'lastName', headerName: 'Last name', width: 130 },
+    {
+      field: 'age',
+      headerName: 'Age',
+      type: 'number',
+      width: 90,
+    },
+    {
+      field: 'fullName',
+      headerName: 'Full name',
+      description: 'This column has a value getter and is not sortable.',
+      sortable: false,
+      width: 160,
+      valueGetter: (params) =>
+        `${params.getValue(params.id, 'firstName') || ''} ${
+          params.getValue(params.id, 'lastName') || ''
+        }`,
+    },
+    {
+      field: "action",
+      headerName: "Action",
+      sortable: false,
+      renderCell: (params) => {
+        return <AlertDialog />;
       }
+    },
+  ];
 
-      return (
-        <div className = "App" >
-          <React.Fragment>
-            <Box
-              sx={{
-                display: 'flex',
-                flexDirection: 'column',
-                minHeight: '100vh',
+  const rows = [
+    { id: 2, lastName: 'Lannister', firstName: 'Cersei', age: 18 },
+    { id: 3, lastName: 'Lannister', firstName: 'Jaime', age: 45 },
+    { id: 4, lastName: 'Stark', firstName: 'Arya', age: 16 },
+    { id: 5, lastName: 'Targaryen', firstName: 'Daenerys', age: null },
+    { id: 6, lastName: 'Melisandre', firstName: null, age: 150 },
+    { id: 7, lastName: 'Clifford', firstName: 'Ferrara', age: 44 },
+    { id: 8, lastName: 'Frances', firstName: 'Rossini', age: 36 },
+    { id: 9, lastName: 'Roxie', firstName: 'Harvey', age: 65 },
+    { id: 10, lastName: 'Jeday', firstName: 'Achraf', age: 35 },
+    { id: 11, lastName: 'Jeday', firstName: 'Ahmed', age: 87 },
+    { id: 12, lastName: 'Jeday', firstName: 'Wassim', age: 43 },
+  ];
+
+  const [loggedIn, setLoggedIn] = useState();
+
+  if(!loggedIn) {
+    return <SignIn setLoggedIn={setLoggedIn} />
+  }
+
+  return (
+    <div className = "App" >
+      <React.Fragment>
+        <Box
+          sx={{
+            display: 'flex',
+            flexDirection: 'column',
+            minHeight: '100vh',
+          }}
+        >
+        <ResponsiveAppBar setLoggedIn={setLoggedIn} />
+          <div className="wrapper">
+            <br />
+            <br />
+            <div
+              style={{
+                  display: 'flex',
+                  justifyContent: 'center'
               }}
             >
-            <ResponsiveAppBar setLoggedIn={setLoggedIn} />
-              <div className="wrapper">
-                <br />
-                <br />
-                <div
-                  style={{
-                      display: 'flex',
-                      justifyContent: 'center'
-                  }}
-                >
-                  <div
-                    style={{
-                        height: 650,
-                        width: '50%'
-                    }}
-                  >
-                    <DataGrid
-                      rows={rows}
-                      columns={columns}
-                      pageSize={10}
-                      rowsPerPageOptions={[10]}
-                    />
-                  </div>
-                </div>
-                <br />
-                <br />
+              <div
+                style={{
+                    height: 650,
+                    width: '50%'
+                }}
+              >
+                <DataGrid
+                  rows={rows}
+                  columns={columns}
+                  pageSize={10}
+                  rowsPerPageOptions={[10]}
+                />
               </div>
-              <StickyFooter />
-            </Box>
-          </React.Fragment>
-        </div>
-      );
-
+            </div>
+            <br />
+            <br />
+          </div>
+          <StickyFooter />
+        </Box>
+      </React.Fragment>
+    </div>
+  );
 }
 
 export default App;

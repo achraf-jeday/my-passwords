@@ -1,7 +1,8 @@
 import * as actionTypes from '../actionTypes';
 
 const initialState = {
-    user_state:''
+    access_token:'',
+    count: ''
 }
 
 export default function user_state(state = initialState, action) {
@@ -10,7 +11,12 @@ export default function user_state(state = initialState, action) {
         case actionTypes.GET_TOKEN:
         return {
             ...state,
-            user_state:action.payload
+            access_token:action.payload
+        }
+        case actionTypes.GET_PASSWORDS:
+        return {
+            ...state,
+            count:action.payload
         }
         default: return state;
     }
