@@ -179,8 +179,6 @@ export const resetPass = (name, temp_pass, new_pass) => async dispatch => {
 }
 
 export const getPasswordsList = (access_token) => async dispatch => {
-    const data = "";
-
     let config = {
         headers: {
             'Authorization': 'Bearer ' + access_token
@@ -188,10 +186,10 @@ export const getPasswordsList = (access_token) => async dispatch => {
     }
 
     try {
-        const response = await axios.get(`http://dev.passwordlocker.loc/api/json/password`, data, config);
+        const response = await axios.get(`http://dev.passwordlocker.loc/api/json/password?page[limit]=10&page[offset]=0`, config);
         dispatch( {
             type: actionTypes.GET_PASSWORDS,
-            payload: response.data.meta.count
+            payload: response
         });
         return response;
     }
