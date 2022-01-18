@@ -191,7 +191,6 @@ export const getPasswordsList = (access_token) => async dispatch => {
             type: actionTypes.GET_PASSWORDS,
             payload: response
         });
-        return response;
     }
     catch(e) {
         dispatch( {
