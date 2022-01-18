@@ -2,6 +2,7 @@ import * as actionTypes from '../actionTypes';
 
 const initialState = {
     access_token:'',
+    rows: '',
     count: ''
 }
 
@@ -14,9 +15,16 @@ export default function user_state(state = initialState, action) {
             access_token:action.payload
         }
         case actionTypes.GET_PASSWORDS:
+
+        var rows = [];
+        action.payload.data.data.forEach(obj => {
+            rows.push(obj.attributes);
+        });
+
         return {
             ...state,
-            count:action.payload
+            rows:rows,
+            count:action.payload.data.meta.count
         }
         default: return state;
     }
