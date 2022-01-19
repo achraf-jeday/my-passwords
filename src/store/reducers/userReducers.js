@@ -7,7 +7,6 @@ const initialState = {
 }
 
 export default function user_state(state = initialState, action) {
-
     switch(action.type) {
         case actionTypes.GET_TOKEN:
         return {
@@ -15,12 +14,13 @@ export default function user_state(state = initialState, action) {
             access_token:action.payload
         }
         case actionTypes.GET_PASSWORDS:
-
         var rows = [];
         action.payload.data.data.forEach(obj => {
+            obj.attributes.id = obj.attributes.drupal_internal__id
+            delete obj.attributes.drupal_internal__id
+            obj.attributes.field_link = obj.attributes.field_link.uri
             rows.push(obj.attributes);
         });
-
         return {
             ...state,
             rows:rows,
@@ -28,5 +28,4 @@ export default function user_state(state = initialState, action) {
         }
         default: return state;
     }
-
 }
