@@ -18,7 +18,7 @@ export default function user_state(state = initialState, action) {
         action.payload.data.data.forEach(obj => {
             obj.attributes.id = obj.attributes.drupal_internal__id;
             delete obj.attributes.drupal_internal__id;
-            let field_link = "obj.attributes.field_link.uri";
+            let field_link = obj.attributes.field_link.uri;
             delete obj.attributes.field_link;
             obj.attributes.field_link = field_link;
             rows.push(obj.attributes);

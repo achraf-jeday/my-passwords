@@ -67,6 +67,7 @@ export const verifyUserPackingKey = (csrf, access_token) => async dispatch => {
             'Authorization': 'Bearer ' + access_token
         }
     }
+    axios.defaults.withCredentials = true;
 
     try {
         const response = await axios.post(`http://dev.passwordlocker.loc/user/packing-key?_format=json`, data, config);
@@ -186,6 +187,7 @@ export const getPasswordsList = (access_token, page) => async dispatch => {
     }
 
     let offset = page * 10;
+    axios.defaults.withCredentials = true;
 
     try {
         const response = await axios.get(`http://dev.passwordlocker.loc/api/json/password?page[limit]=10&page[offset]=` + offset, config);
