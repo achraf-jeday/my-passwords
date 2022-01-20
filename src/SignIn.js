@@ -23,20 +23,19 @@ import { createTheme, ThemeProvider } from '@mui/material/styles';
 
 const theme = createTheme();
 
-export function SignIn({ setLoggedIn }) {
-
+export function SignIn({ setLoggedIn, setRowsState }) {
   const [username, setUserName] = useState();
   const [password, setPassword] = useState();
   const dispatch = useDispatch();
-
   const handleSubmit = async event => {
     event.preventDefault();
     const data = new FormData(event.currentTarget);
     var csrf = await dispatch(getCSRFToken());
     var access_token = await dispatch(getAccessToken(data.get('email'), data.get('password')));
     await dispatch(verifyUserPackingKey(csrf, access_token));
-    await dispatch(getPasswordsList(access_token));
+    let newRows = await dispatch(getPasswordsList(access_token, 0));
     setLoggedIn(true);
+    setRowsState((prev) => ({ ...prev, rows: newRows }));
   }
 
   return (

@@ -1,11 +1,14 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useRef, useEffect, useLayoutEffect } from 'react';
 import axios from 'axios';
 import { useDispatch, useSelector } from 'react-redux';
+import { getCSRFToken, getAccessToken, verifyUserPackingKey, getPasswordsList } from './store/actions/usersActions';
 import querystring from 'querystring';
 import StickyFooter from './StickyFooter';
 import SignIn from './SignIn';
 import ResponsiveAppBar from './ResponsiveAppBar';
 import './App.css';
+
+import { useDemoData } from '@mui/x-data-grid-generator';
 
 import CssBaseline from '@mui/material/CssBaseline';
 import Box from '@mui/material/Box';
@@ -164,58 +167,71 @@ function AlertDialog() {
   );
 }
 
+const loadServerRows = (dispatch, access_token, page) =>
+  new Promise((resolve) => {
+    resolve(dispatch(getPasswordsList(access_token, page)));
+  });
+
 function App() {
+  const [loggedIn, setLoggedIn] = useState();
   const user_state = useSelector(state => state.user_state);
+  const dispatch = useDispatch();
 
   const columns = [
-    { field: 'id', headerName: 'ID', width: 70 },
-    { field: 'firstName', headerName: 'First name', width: 130 },
-    { field: 'lastName', headerName: 'Last name', width: 130 },
-    {
-      field: 'age',
-      headerName: 'Age',
-      type: 'number',
-      width: 90,
-    },
-    {
-      field: 'fullName',
-      headerName: 'Full name',
-      description: 'This column has a value getter and is not sortable.',
-      sortable: false,
-      width: 160,
-      valueGetter: (params) =>
-        `${params.getValue(params.id, 'firstName') || ''} ${
-          params.getValue(params.id, 'lastName') || ''
-        }`,
-    },
-    {
-      field: "action",
-      headerName: "Action",
-      sortable: false,
-      renderCell: (params) => {
-        return <AlertDialog />;
+    { field: 'id', headerName: 'ID', width: 80 },
+    { field: 'name', headerName: 'name', width: 80 },
+    { field: 'field_email', headerName: 'Email', width: 80 },
+    { field: 'field_link', headerName: 'Link', width: 80 },
+    { field: 'field_user_id', headerName: 'User ID', width: 80 },
+    { field: 'field_password', headerName: 'Password', width: 80 },
+    { field: 'field_notes', headerName: 'Notes', width: 600, hide: true },
+    { field: 'metatag', headerName: 'Metatag', width: 80, hide: true },
+    { field: 'changed', headerName: 'Changed', width: 80 },
+    { field: 'created', headerName: 'Created', width: 80 }
+  ];
+
+  const [rowsState, setRowsState] = React.useState({
+    page: 0,
+    pageSize: 10,
+    rows: [],
+    loading: false,
+  });
+
+  React.useEffect(() => {
+  }, []);
+
+  const firstUpdate = useRef(true);
+  useLayoutEffect(() => {
+    if (firstUpdate.current) {
+      firstUpdate.current = false;
+      return;
+    }
+
+    let active = true;
+
+    (async () => {
+      setRowsState((prev) => ({ ...prev, loading: true }));
+
+      const newRows = await loadServerRows(
+        dispatch,
+        user_state.access_token,
+        rowsState.page,
+      );
+
+      if (!active) {
+        return;
       }
-    },
-  ];
+      setRowsState((prev) => ({ ...prev, loading: false, rows: newRows }));
+    })();
 
-  const rows = [
-    { id: 2, lastName: 'Lannister', firstName: 'Cersei', age: 18 },
-    { id: 3, lastName: 'Lannister', firstName: 'Jaime', age: 45 },
-    { id: 4, lastName: 'Stark', firstName: 'Arya', age: 16 },
-    { id: 5, lastName: 'Targaryen', firstName: 'Daenerys', age: null },
-    { id: 6, lastName: 'Melisandre', firstName: null, age: 150 },
-    { id: 7, lastName: 'Clifford', firstName: 'Ferrara', age: 44 },
-    { id: 8, lastName: 'Frances', firstName: 'Rossini', age: 36 },
-    { id: 9, lastName: 'Roxie', firstName: 'Harvey', age: 65 },
-    { id: 10, lastName: 'Jeday', firstName: 'Achraf', age: 35 },
-    { id: 11, lastName: 'Jeday', firstName: 'Ahmed', age: 87 },
-    { id: 12, lastName: 'Jeday', firstName: 'Wassim', age: 43 },
-  ];
+    return () => {
+      active = false;
+    };
 
-  const [loggedIn, setLoggedIn] = useState();
+  }, [rowsState.page, rowsState.pageSize]);
 
   if(!loggedIn) {
-    return <SignIn setLoggedIn={setLoggedIn} />
+    return <SignIn setLoggedIn={setLoggedIn} setRowsState={setRowsState} />
   }
 
   return (
@@ -245,10 +261,15 @@ function App() {
                 }}
               >
                 <DataGrid
-                  rows={rows}
                   columns={columns}
-                  pageSize={10}
-                  rowsPerPageOptions={[10]}
+                  pagination
+                  rowCount={200}
+                  {...rowsState}
+                  paginationMode="server"
+                  onPageChange={(page) => setRowsState((prev) => ({ ...prev, page }))}
+                  onPageSizeChange={(pageSize) =>
+                    setRowsState((prev) => ({ ...prev, pageSize }))
+                  }
                 />
               </div>
             </div>

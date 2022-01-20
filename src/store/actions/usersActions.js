@@ -6,7 +6,7 @@ export const getAccessToken = (email, password) => async dispatch => {
 
     const data = {
         grant_type: "password",
-        client_id: "5d804eed-c03e-48b6-9d6d-79f744708856",
+        client_id: "0780aedc-cefa-4603-81bf-a9fd35cd702d",
         client_secret: "SuperSecret123&",
         scope: "customer",
         username: email,
@@ -178,19 +178,26 @@ export const resetPass = (name, temp_pass, new_pass) => async dispatch => {
 
 }
 
-export const getPasswordsList = (access_token) => async dispatch => {
+export const getPasswordsList = (access_token, page) => async dispatch => {
     let config = {
         headers: {
             'Authorization': 'Bearer ' + access_token
         }
     }
 
+    let offset = page * 10;
+
     try {
-        const response = await axios.get(`http://dev.passwordlocker.loc/api/json/password?page[limit]=10&page[offset]=0`, config);
+        const response = await axios.get(`http://dev.passwordlocker.loc/api/json/password?page[limit]=10&page[offset]=` + offset, config);
         dispatch( {
             type: actionTypes.GET_PASSWORDS,
             payload: response
         });
+        var rows = [];
+        response.data.data.forEach(obj => {
+            rows.push(obj.attributes);
+        });
+        return rows;
     }
     catch(e) {
         dispatch( {
