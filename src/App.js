@@ -178,16 +178,16 @@ function App() {
   const dispatch = useDispatch();
 
   const columns = [
-    { field: 'id', headerName: 'ID', width: 80 },
-    { field: 'name', headerName: 'name', width: 80 },
-    { field: 'field_email', headerName: 'Email', width: 80 },
-    { field: 'field_link', headerName: 'Link', width: 80 },
-    { field: 'field_user_id', headerName: 'User ID', width: 80 },
-    { field: 'field_password', headerName: 'Password', width: 80 },
+    { field: 'id', headerName: 'ID', width: 150 },
+    { field: 'name', headerName: 'name', width: 150 },
+    { field: 'field_email', headerName: 'Email', width: 150 },
+    { field: 'field_link', headerName: 'Link', width: 150 },
+    { field: 'field_user_id', headerName: 'User ID', width: 150 },
+    { field: 'field_password', headerName: 'Password', width: 150 },
     { field: 'field_notes', headerName: 'Notes', width: 600, hide: true },
-    { field: 'metatag', headerName: 'Metatag', width: 80, hide: true },
-    { field: 'changed', headerName: 'Changed', width: 80 },
-    { field: 'created', headerName: 'Created', width: 80 }
+    { field: 'metatag', headerName: 'Metatag', width: 150, hide: true },
+    { field: 'changed', headerName: 'Changed', width: 150 },
+    { field: 'created', headerName: 'Created', width: 150 }
   ];
 
   const [rowsState, setRowsState] = React.useState({
@@ -257,13 +257,13 @@ function App() {
               <div
                 style={{
                     height: 650,
-                    width: '50%'
+                    width: '90%'
                 }}
               >
                 <DataGrid
                   columns={columns}
                   pagination
-                  rowCount={200}
+                  rowCount={parseInt(user_state.count, 10)}
                   {...rowsState}
                   paginationMode="server"
                   onPageChange={(page) => setRowsState((prev) => ({ ...prev, page }))}
