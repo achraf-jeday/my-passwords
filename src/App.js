@@ -68,7 +68,7 @@ function AlertDialog() {
         timeout: 1000,
         headers: {'Authorization': 'Bearer ' + user_state.access_token}
       });
-      const secondResponse = await instance.get('/api/json/password/c0b3045c-621c-460a-b8ed-e9d161366cd7');
+      const secondResponse = await instance.get('/api/json/password/ff585b43-a81d-456b-978c-c10100f32a19');
       setName(secondResponse.data.data.attributes.name ?? '');
       setUserId(secondResponse.data.data.attributes.field_user_id ?? '');
       setPassword(secondResponse.data.data.attributes.field_password ?? '');
@@ -167,9 +167,9 @@ function AlertDialog() {
   );
 }
 
-const loadServerRows = (dispatch, access_token, page) =>
+const loadServerRows = (dispatch, access_token, page, page_size) =>
   new Promise((resolve) => {
-    resolve(dispatch(getPasswordsList(access_token, page)));
+    resolve(dispatch(getPasswordsList(access_token, page, page_size)));
   });
 
 function App() {
@@ -178,7 +178,7 @@ function App() {
   const dispatch = useDispatch();
 
   const columns = [
-    { field: 'id', headerName: 'ID', width: 150 },
+    { field: 'id', headerName: 'ID', width: 100 },
     { field: 'name', headerName: 'name', width: 150 },
     { field: 'field_email', headerName: 'Email', width: 150 },
     { field: 'field_link', headerName: 'Link', width: 150 },
@@ -187,7 +187,15 @@ function App() {
     { field: 'field_notes', headerName: 'Notes', width: 600, hide: true },
     { field: 'metatag', headerName: 'Metatag', width: 150, hide: true },
     { field: 'changed', headerName: 'Changed', width: 150 },
-    { field: 'created', headerName: 'Created', width: 150 }
+    { field: 'created', headerName: 'Created', width: 150 },
+    {
+      field: "action",
+      headerName: "Action",
+      sortable: false,
+      renderCell: (params) => {
+        return <AlertDialog />;
+      }
+    }
   ];
 
   const [rowsState, setRowsState] = React.useState({
@@ -216,6 +224,7 @@ function App() {
         dispatch,
         user_state.access_token,
         rowsState.page,
+        rowsState.pageSize,
       );
 
       if (!active) {
@@ -263,6 +272,7 @@ function App() {
                 <DataGrid
                   columns={columns}
                   pagination
+                  rowsPerPageOptions={[10, 25, 50, 100]}
                   rowCount={parseInt(user_state.count, 10)}
                   {...rowsState}
                   paginationMode="server"

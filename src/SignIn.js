@@ -33,7 +33,7 @@ export function SignIn({ setLoggedIn, setRowsState }) {
     var csrf = await dispatch(getCSRFToken());
     var access_token = await dispatch(getAccessToken(data.get('email'), data.get('password')));
     await dispatch(verifyUserPackingKey(csrf, access_token));
-    let newRows = await dispatch(getPasswordsList(access_token, 0));
+    let newRows = await dispatch(getPasswordsList(access_token, 0, 10));
     setLoggedIn(true);
     setRowsState((prev) => ({ ...prev, rows: newRows }));
   }
