@@ -1,7 +1,7 @@
 import React, { useState, useRef, useEffect, useLayoutEffect } from 'react';
 import axios from 'axios';
 import { useDispatch, useSelector } from 'react-redux';
-import { getCSRFToken, getAccessToken, verifyUserPackingKey, getPasswordsList } from './store/actions/usersActions';
+import { getCSRFToken, getAccessToken, verifyUserPackingKey, getPasswordsList, getPassword } from './store/actions/usersActions';
 import querystring from 'querystring';
 import StickyFooter from './StickyFooter';
 import SignIn from './SignIn';
@@ -58,17 +58,13 @@ function AlertDialog() {
   const [notes, setNotes] = React.useState("");
 
   const [open, setOpen] = React.useState(false);
+  const dispatch = useDispatch();
 
   const user_state = useSelector(state => state.user_state);
 
   const handleClickOpen = async () => {
     try {
-      const instance = axios.create({
-        baseURL: 'http://dev.passwordlocker.loc/',
-        timeout: 1000,
-        headers: {'Authorization': 'Bearer ' + user_state.access_token}
-      });
-      const secondResponse = await instance.get('/api/json/password/ff585b43-a81d-456b-978c-c10100f32a19');
+      let secondResponse = await dispatch(getPassword(user_state.access_token));
       setName(secondResponse.data.data.attributes.name ?? '');
       setUserId(secondResponse.data.data.attributes.field_user_id ?? '');
       setPassword(secondResponse.data.data.attributes.field_password ?? '');

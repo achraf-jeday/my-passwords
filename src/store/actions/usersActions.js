@@ -207,3 +207,28 @@ export const getPasswordsList = (access_token, page, page_size) => async dispatc
         })
     }
 }
+
+export const getPassword = (access_token) => async dispatch => {
+    let config = {
+        headers: {
+            'Authorization': 'Bearer ' + access_token
+        }
+    }
+
+    axios.defaults.withCredentials = true;
+
+    try {
+        const response = await axios.get('http://dev.passwordlocker.loc/api/json/password/ff585b43-a81d-456b-978c-c10100f32a19', config);
+        dispatch( {
+            type: actionTypes.GET_PASSWORD,
+            payload: response
+        });
+        return response;
+    }
+    catch(e) {
+        dispatch( {
+            type: actionTypes.GET_PASSWORD_ERROR,
+            payload: console.log(e),
+        })
+    }
+}
