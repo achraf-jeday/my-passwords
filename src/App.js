@@ -47,7 +47,7 @@ import InputAdornment from '@mui/material/InputAdornment';
 import AccountCircle from '@mui/icons-material/AccountCircle';
 import Grid from '@mui/material/Grid';
 
-function AlertDialog() {
+function AlertDialog({entry}) {
 
   const [name, setName] = React.useState("");
   const [userId, setUserId] = React.useState("");
@@ -60,18 +60,15 @@ function AlertDialog() {
   const [open, setOpen] = React.useState(false);
   const dispatch = useDispatch();
 
-  const user_state = useSelector(state => state.user_state);
-
   const handleClickOpen = async () => {
     try {
-      let secondResponse = await dispatch(getPassword(user_state.access_token));
-      setName(secondResponse.data.data.attributes.name ?? '');
-      setUserId(secondResponse.data.data.attributes.field_user_id ?? '');
-      setPassword(secondResponse.data.data.attributes.field_password ?? '');
-      setLink(secondResponse.data.data.attributes.field_link.uri ?? '');
-      setEmail(secondResponse.data.data.attributes.field_email ?? '');
-      setMetatag(secondResponse.data.data.attributes.metatag ?? '');
-      setNotes(secondResponse.data.data.attributes.field_notes ?? '');
+      setName(entry.getValue(entry.id, 'name') ?? '');
+      setUserId(entry.getValue(entry.id, 'field_user_id') ?? '');
+      setPassword(entry.getValue(entry.id, 'field_password') ?? '');
+      setLink(entry.getValue(entry.id, 'field_link') ?? '');
+      setEmail(entry.getValue(entry.id, 'field_email') ?? '');
+      setMetatag(entry.getValue(entry.id, 'metatag') ?? '');
+      setNotes(entry.getValue(entry.id, 'field_notes') ?? '');
     } catch (error) {
       console.log(error);
     }
@@ -189,7 +186,7 @@ function App() {
       headerName: "Action",
       sortable: false,
       renderCell: (params) => {
-        return <AlertDialog />;
+        return <AlertDialog entry={params} />;
       }
     }
   ];
