@@ -69,6 +69,7 @@ function AlertDialog({entry}) {
       setEmail(entry.getValue(entry.id, 'field_email') ?? '');
       setMetatag(entry.getValue(entry.id, 'metatag') ?? '');
       setNotes(entry.getValue(entry.id, 'field_notes') ?? '');
+      console.log(entry.getValue(entry.id, 'uuid'));
     } catch (error) {
       console.log(error);
     }

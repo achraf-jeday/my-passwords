@@ -21,6 +21,7 @@ export default function user_state(state = initialState, action) {
             let field_link = obj.attributes.field_link.uri;
             delete obj.attributes.field_link;
             obj.attributes.field_link = field_link;
+            obj.attributes.uuid = obj.id;
             rows.push(obj.attributes);
         });
         return {
