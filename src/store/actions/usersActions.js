@@ -185,8 +185,9 @@ export const getPasswordsList = (access_token, page, page_size) => async dispatc
         }
     }
 
-    let offset = page * page_size;
     axios.defaults.withCredentials = true;
+
+    let offset = page * page_size;
 
     try {
         const response = await axios.get('http://dev.passwordlocker.loc/api/json/password?page[limit]=' + page_size + '&page[offset]=' + offset, config);
@@ -228,6 +229,50 @@ export const getPassword = (access_token) => async dispatch => {
     catch(e) {
         dispatch( {
             type: actionTypes.GET_PASSWORD_ERROR,
+            payload: console.log(e),
+        })
+    }
+}
+
+export const updatePasswordAction = (csrf, access_token) => async dispatch => {
+    var data = JSON.stringify({
+        "data": {
+            "type": "password--password",
+            "id": "ff585b43-a81d-456b-978c-c10100f32a19",
+            "attributes": {
+                "status": false,
+                "name": "Maya my slave [UPDATED]!",
+                "field_email": "achraf.hero@gmail.com",
+                "field_link": "http://dev.passwordlocker.loc/devel/password/1",
+                "field_notes": "something Maya!",
+                "field_password": "Achraf is up to date!!",
+                "field_user_id": "Tunprog888"
+            }
+        }
+    });
+
+    let config = {
+        headers: {
+            'Accept': 'application/vnd.api+json',
+            'Content-Type': 'application/vnd.api+json',
+            'Authorization': 'Bearer ' + access_token,
+            'X-CSRF-Token': csrf
+        }
+    }
+
+    axios.defaults.withCredentials = true;
+
+    try {
+        const response = await axios.patch(`http://dev.passwordlocker.loc/api/json/password/ff585b43-a81d-456b-978c-c10100f32a19`, data, config);
+        console.log(JSON.stringify(response.data));
+        dispatch( {
+            type: actionTypes.UPDATE_PASSWORD,
+            payload: response
+        });
+    }
+    catch(e) {
+        dispatch( {
+            type: actionTypes.UPDATE_PASSWORD_ERROR,
             payload: console.log(e),
         })
     }

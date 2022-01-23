@@ -1,7 +1,7 @@
 import React, { useState, useRef, useEffect, useLayoutEffect } from 'react';
 import axios from 'axios';
 import { useDispatch, useSelector } from 'react-redux';
-import { getCSRFToken, getAccessToken, verifyUserPackingKey, getPasswordsList, getPassword } from './store/actions/usersActions';
+import { getCSRFToken, getAccessToken, verifyUserPackingKey, getPasswordsList, getPassword, updatePasswordAction } from './store/actions/usersActions';
 import querystring from 'querystring';
 import StickyFooter from './StickyFooter';
 import SignIn from './SignIn';
@@ -58,6 +58,7 @@ function AlertDialog({entry}) {
   const [notes, setNotes] = React.useState("");
 
   const [open, setOpen] = React.useState(false);
+  const user_state = useSelector(state => state.user_state);
   const dispatch = useDispatch();
 
   const handleClickOpen = async () => {
@@ -74,6 +75,12 @@ function AlertDialog({entry}) {
       console.log(error);
     }
     setOpen(true);
+  };
+
+  const updatePassword = async () => {
+    var csrf = await dispatch(getCSRFToken());
+    await dispatch(updatePasswordAction(csrf, user_state.access_token));
+    setOpen(false);
   };
 
   const handleClose = () => {
@@ -152,7 +159,7 @@ function AlertDialog({entry}) {
         </DialogContent>
         <DialogActions>
           <Button onClick={handleClose}>Cancel</Button>
-          <Button onClick={handleClose} autoFocus>
+          <Button onClick={updatePassword} autoFocus>
             OK
           </Button>
         </DialogActions>
@@ -180,6 +187,7 @@ function App() {
     { field: 'field_password', headerName: 'Password', width: 150 },
     { field: 'field_notes', headerName: 'Notes', width: 600, hide: true },
     { field: 'metatag', headerName: 'Metatag', width: 150, hide: true },
+    { field: 'uuid', headerName: 'UUID', width: 150, hide: true },
     { field: 'changed', headerName: 'Changed', width: 150 },
     { field: 'created', headerName: 'Created', width: 150 },
     {
