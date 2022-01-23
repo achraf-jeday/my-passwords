@@ -49,15 +49,15 @@ import Grid from '@mui/material/Grid';
 
 function AlertDialog({entry}) {
 
-  const [name, setName] = React.useState("");
-  const [userId, setUserId] = React.useState("");
-  const [password, setPassword] = React.useState("");
-  const [link, setLink] = React.useState("");
-  const [email, setEmail] = React.useState("");
-  const [metatag, setMetatag] = React.useState("");
-  const [notes, setNotes] = React.useState("");
+  const [name, setName] = useState("");
+  const [userId, setUserId] = useState("");
+  const [password, setPassword] = useState("");
+  const [link, setLink] = useState("");
+  const [email, setEmail] = useState("");
+  const [metatag, setMetatag] = useState("");
+  const [notes, setNotes] = useState("");
 
-  const [open, setOpen] = React.useState(false);
+  const [open, setOpen] = useState(false);
   const user_state = useSelector(state => state.user_state);
   const dispatch = useDispatch();
 
@@ -77,10 +77,13 @@ function AlertDialog({entry}) {
     setOpen(true);
   };
 
-  const updatePassword = async () => {
-    var csrf = await dispatch(getCSRFToken());
-    await dispatch(updatePasswordAction(csrf, user_state.access_token));
+  const updatePassword = async event => {
+    event.preventDefault();
+    const data = new FormData(event.currentTarget);
+    console.log(data);
     setOpen(false);
+    var csrf = await dispatch(getCSRFToken());
+    await dispatch(updatePasswordAction(csrf, user_state.access_token, data));
   };
 
   const handleClose = () => {
@@ -113,6 +116,7 @@ function AlertDialog({entry}) {
         <DialogContent>
           <Box
             component="form"
+            onSubmit={updatePassword}
             sx={{
               '& > :not(style)': { width: '100%' },
             }}
@@ -123,9 +127,16 @@ function AlertDialog({entry}) {
             <Grid container direction="row" justifyContent="center" alignItems="flex-start">
               <Grid container item spacing={2} xs={6} direction={"column"} justifyContent="center" alignItems="center">
                 <Grid item style={{ width: '90%' }}>
-                  <TextField fullWidth id="name" label="Name" size="small" value={name} />
+                  <TextField
+                    fullWidth
+                    id="name"
+                    label="Name"
+                    size="small"
+                    value={name}
+                    onChange={e => setName(e.target.value)}
+                  />
                 </Grid>
-                <Grid item style={{ width: '90%' }}>
+{/*                <Grid item style={{ width: '90%' }}>
                   <TextField fullWidth id="user-id" label="User ID" size="small" value={userId} />
                 </Grid>
                 <Grid item style={{ width: '90%' }}>
@@ -139,10 +150,10 @@ function AlertDialog({entry}) {
                 </Grid>
                 <Grid item style={{ width: '90%' }}>
                   <TextField fullWidth id="tags" label="Tags" size="small" value={metatag} />
-                </Grid>
+                </Grid>*/}
               </Grid>
               <Grid container item spacing={2} xs={6} direction={"column"} justifyContent="center" alignItems="center">
-                <Grid item style={{ width: '90%' }}>
+{/*                <Grid item style={{ width: '90%' }}>
                   <TextField
                     fullWidth
                     id="notes"
@@ -152,17 +163,19 @@ function AlertDialog({entry}) {
                     rows={8}
                     value={notes}
                   />
-                </Grid>
+                </Grid>*/}
               </Grid>
             </Grid>
-          </Box>
-        </DialogContent>
-        <DialogActions>
           <Button onClick={handleClose}>Cancel</Button>
-          <Button onClick={updatePassword} autoFocus>
+          <Button
+            type="submit"
+            variant="contained"
+            autoFocus
+          >
             OK
           </Button>
-        </DialogActions>
+          </Box>
+        </DialogContent>
       </Dialog>
     </div>
   );
