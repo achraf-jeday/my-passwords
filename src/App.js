@@ -274,20 +274,21 @@ function App() {
 
   const columns = [
     { field: 'id', headerName: 'ID', width: 100 },
-    { field: 'name', headerName: 'name', width: 150 },
-    { field: 'field_email', headerName: 'Email', width: 150 },
-    { field: 'field_link', headerName: 'Link', width: 150 },
-    { field: 'field_user_id', headerName: 'User ID', width: 150 },
-    { field: 'field_password', headerName: 'Password', width: 150 },
+    { field: 'name', headerName: 'name', width: 600 },
+    { field: 'field_email', headerName: 'Email', width: 150 , hide: true },
+    { field: 'field_link', headerName: 'Link', width: 150 , hide: true },
+    { field: 'field_user_id', headerName: 'User ID', width: 150 , hide: true },
+    { field: 'field_password', headerName: 'Password', width: 150 , hide: true },
     { field: 'field_notes', headerName: 'Notes', width: 600, hide: true },
     { field: 'metatag', headerName: 'Metatag', width: 150, hide: true },
     { field: 'uuid', headerName: 'UUID', width: 150, hide: true },
-    { field: 'changed', headerName: 'Changed', width: 150 },
-    { field: 'created', headerName: 'Created', width: 150 },
+    { field: 'changed', headerName: 'Changed', width: 200 },
+    { field: 'created', headerName: 'Created', width: 200 },
     {
       field: "action",
       headerName: "Action",
       sortable: false,
+      width: 100,
       renderCell: (params) => {
         return <AlertDialog entry={params} rowsState={rowsState} setRowsState={setRowsState} />;
       }
