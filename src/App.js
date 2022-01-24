@@ -47,7 +47,7 @@ import InputAdornment from '@mui/material/InputAdornment';
 import AccountCircle from '@mui/icons-material/AccountCircle';
 import Grid from '@mui/material/Grid';
 
-function AlertDialog({entry}) {
+function AlertDialog({entry, setRowsState}) {
 
   const [name, setName] = useState("");
   const [userId, setUserId] = useState("");
@@ -84,9 +84,22 @@ function AlertDialog({entry}) {
       fields[key] = value;
     }
     fields['uuid'] = entry.getValue(entry.id, 'uuid');
+
     setOpen(false);
-    var csrf = await dispatch(getCSRFToken());
-    await dispatch(updatePasswordAction(csrf, user_state.access_token, fields));
+
+    (async () => {
+      setRowsState((prev) => ({ ...prev, loading: true }));
+      var csrf = await dispatch(getCSRFToken());
+      await dispatch(updatePasswordAction(csrf, user_state.access_token, fields));
+      const newRows = await loadServerRows(
+        dispatch,
+        user_state.access_token,
+        0,
+        10,
+      );
+      setRowsState((prev) => ({ ...prev, loading: false, rows: newRows }));
+    })();
+
   };
 
   const handleClose = () => {
@@ -253,7 +266,7 @@ function App() {
       headerName: "Action",
       sortable: false,
       renderCell: (params) => {
-        return <AlertDialog entry={params} />;
+        return <AlertDialog entry={params} setRowsState={setRowsState} />;
       }
     }
   ];
