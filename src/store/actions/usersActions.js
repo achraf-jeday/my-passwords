@@ -234,19 +234,19 @@ export const getPassword = (access_token) => async dispatch => {
     }
 }
 
-export const updatePasswordAction = (csrf, access_token, data) => async dispatch => {
+export const updatePasswordAction = (csrf, access_token, fields) => async dispatch => {
     var data = JSON.stringify({
         "data": {
             "type": "password--password",
-            "id": "ff585b43-a81d-456b-978c-c10100f32a19",
+            "id": fields['uuid'],
             "attributes": {
                 "status": false,
-                "name": "Maya [UPDATED]!",
-                "field_email": "achraf.hero@gmail.com",
-                "field_link": "http://dev.passwordlocker.loc/devel/password/1",
-                "field_notes": "something Maya!",
-                "field_password": "Achraf is up to date!!",
-                "field_user_id": "Tunprog888"
+                "name": fields['name'],
+                "field_email": fields['email'],
+                "field_link": fields['link'],
+                "field_notes": fields['notes'],
+                "field_password": fields['password'],
+                "field_user_id": fields['user-id']
             }
         }
     });
@@ -263,7 +263,7 @@ export const updatePasswordAction = (csrf, access_token, data) => async dispatch
     axios.defaults.withCredentials = true;
 
     try {
-        const response = await axios.patch(`http://dev.passwordlocker.loc/api/json/password/ff585b43-a81d-456b-978c-c10100f32a19`, data, config);
+        const response = await axios.patch('http://dev.passwordlocker.loc/api/json/password/' + fields['uuid'], data, config);
         dispatch( {
             type: actionTypes.UPDATE_PASSWORD,
             payload: response

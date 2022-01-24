@@ -70,7 +70,6 @@ function AlertDialog({entry}) {
       setEmail(entry.getValue(entry.id, 'field_email') ?? '');
       setMetatag(entry.getValue(entry.id, 'metatag') ?? '');
       setNotes(entry.getValue(entry.id, 'field_notes') ?? '');
-      console.log(entry.getValue(entry.id, 'uuid'));
     } catch (error) {
       console.log(error);
     }
@@ -79,11 +78,15 @@ function AlertDialog({entry}) {
 
   const updatePassword = async event => {
     event.preventDefault();
-    const data = new FormData(event.currentTarget);
-    console.log(data);
+    var data = new FormData(event.currentTarget);
+    var fields = [];
+    for (var [key, value] of data.entries()) {
+      fields[key] = value;
+    }
+    fields['uuid'] = entry.getValue(entry.id, 'uuid');
     setOpen(false);
     var csrf = await dispatch(getCSRFToken());
-    await dispatch(updatePasswordAction(csrf, user_state.access_token, data));
+    await dispatch(updatePasswordAction(csrf, user_state.access_token, fields));
   };
 
   const handleClose = () => {
@@ -110,72 +113,114 @@ function AlertDialog({entry}) {
         fullWidth
         maxWidth="md"
       >
-        <DialogTitle id="alert-dialog-title">
-          {"Entry Details"}
-        </DialogTitle>
-        <DialogContent>
-          <Box
-            component="form"
-            onSubmit={updatePassword}
-            sx={{
-              '& > :not(style)': { width: '100%' },
-            }}
-            noValidate
-            autoComplete="off"
-          >
-            <br />
-            <Grid container direction="row" justifyContent="center" alignItems="flex-start">
-              <Grid container item spacing={2} xs={6} direction={"column"} justifyContent="center" alignItems="center">
-                <Grid item style={{ width: '90%' }}>
-                  <TextField
-                    fullWidth
-                    id="name"
-                    label="Name"
-                    size="small"
-                    value={name}
-                    onChange={e => setName(e.target.value)}
-                  />
+        <Box
+          component="form"
+          onSubmit={updatePassword}
+          noValidate
+          autoComplete="off"
+        >
+          <DialogTitle id="alert-dialog-title">
+            {"Entry Details"}
+          </DialogTitle>
+          <DialogContent>
+              <br />
+              <Grid container direction="row" justifyContent="center" alignItems="flex-start">
+                <Grid container item spacing={2} xs={6} direction={"column"} justifyContent="center" alignItems="center">
+                  <Grid item style={{ width: '90%' }}>
+                    <TextField
+                      fullWidth
+                      id="name"
+                      label="Name"
+                      name="name"
+                      size="small"
+                      value={name}
+                      onChange={e => setName(e.target.value)}
+                    />
+                  </Grid>
+                  <Grid item style={{ width: '90%' }}>
+                    <TextField
+                      fullWidth
+                      id="user-id"
+                      label="User ID"
+                      name="user-id"
+                      size="small"
+                      value={userId}
+                      onChange={e => setUserId(e.target.value)}
+                    />
+                  </Grid>
+                  <Grid item style={{ width: '90%' }}>
+                    <TextField
+                      fullWidth
+                      id="password"
+                      label="Password"
+                      name="password"
+                      size="small"
+                      value={password}
+                      onChange={e => setPassword(e.target.value)}
+                    />
+                  </Grid>
+                  <Grid item style={{ width: '90%' }}>
+                    <TextField
+                      fullWidth
+                      id="link"
+                      label="Link"
+                      name="link"
+                      size="small"
+                      value={link}
+                      onChange={e => setLink(e.target.value)}
+                    />
+                  </Grid>
+                  <Grid item style={{ width: '90%' }}>
+                    <TextField
+                      fullWidth
+                      id="email"
+                      label="Email"
+                      name="email"
+                      size="small"
+                      value={email}
+                      onChange={e => setEmail(e.target.value)}
+                    />
+                  </Grid>
+                  <Grid item style={{ width: '90%' }}>
+                    <TextField
+                      fullWidth
+                      id="tags"
+                      label="Tags"
+                      name="tags"
+                      size="small"
+                      value={metatag}
+                      onChange={e => setMetatag(e.target.value)}
+                    />
+                  </Grid>
                 </Grid>
-{/*                <Grid item style={{ width: '90%' }}>
-                  <TextField fullWidth id="user-id" label="User ID" size="small" value={userId} />
+                <Grid container item spacing={2} xs={6} direction={"column"} justifyContent="center" alignItems="center">
+                  <Grid item style={{ width: '90%' }}>
+                    <TextField
+                      fullWidth
+                      id="notes"
+                      label="Notes"
+                      name="notes"
+                      size="small"
+                      multiline
+                      rows={8}
+                      value={notes}
+                      onChange={e => setNotes(e.target.value)}
+                    />
+                  </Grid>
                 </Grid>
-                <Grid item style={{ width: '90%' }}>
-                  <TextField fullWidth id="password" label="Password" size="small" type="password" value={password} />
-                </Grid>
-                <Grid item style={{ width: '90%' }}>
-                  <TextField fullWidth id="link" label="Link" size="small" value={link} />
-                </Grid>
-                <Grid item style={{ width: '90%' }}>
-                  <TextField fullWidth id="email" label="Email" size="small" value={email} />
-                </Grid>
-                <Grid item style={{ width: '90%' }}>
-                  <TextField fullWidth id="tags" label="Tags" size="small" value={metatag} />
-                </Grid>*/}
               </Grid>
-              <Grid container item spacing={2} xs={6} direction={"column"} justifyContent="center" alignItems="center">
-{/*                <Grid item style={{ width: '90%' }}>
-                  <TextField
-                    fullWidth
-                    id="notes"
-                    label="Notes"
-                    size="small"
-                    multiline
-                    rows={8}
-                    value={notes}
-                  />
-                </Grid>*/}
-              </Grid>
-            </Grid>
-          <Button onClick={handleClose}>Cancel</Button>
-          <Button
-            type="submit"
-            variant="contained"
-            autoFocus
-          >
-            OK
-          </Button>
-          </Box>
-        </DialogContent>
+          </DialogContent>
+          <DialogActions>
+            <Button onClick={handleClose}>Cancel</Button>
+            <Button
+              type="submit"
+              variant="contained"
+              autoFocus
+            >
+              OK
+            </Button>
+          </DialogActions>
+        </Box>
       </Dialog>
     </div>
   );
