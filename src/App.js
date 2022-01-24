@@ -47,7 +47,7 @@ import InputAdornment from '@mui/material/InputAdornment';
 import AccountCircle from '@mui/icons-material/AccountCircle';
 import Grid from '@mui/material/Grid';
 
-function AlertDialog({entry, setRowsState}) {
+function AlertDialog({entry, rowsState, setRowsState}) {
 
   const [name, setName] = useState("");
   const [userId, setUserId] = useState("");
@@ -91,11 +91,22 @@ function AlertDialog({entry, setRowsState}) {
       setRowsState((prev) => ({ ...prev, loading: true }));
       var csrf = await dispatch(getCSRFToken());
       await dispatch(updatePasswordAction(csrf, user_state.access_token, fields));
-      const newRows = await loadServerRows(
-        dispatch,
-        user_state.access_token,
-        0,
-        10,
+      let target = entry.id % rowsState.pageSize;
+      if (target != 0) {
+        --target;
+      }
+      console.log(entry.id);
+      console.log(rowsState.pageSize);
+      console.log(target);
+      rowsState.rows[target].name = fields['name'];
+      rowsState.rows[target].field_user_id = fields['user-id'];
+      rowsState.rows[target].field_password = fields['password'];
+      rowsState.rows[target].field_link = fields['link'];
+      rowsState.rows[target].field_email = fields['email'];
+      rowsState.rows[target].metatag = fields['tags'];
+      rowsState.rows[target].field_notes = fields['notes'];
+      const newRows = await refreshRows(
+        rowsState,
       );
       setRowsState((prev) => ({ ...prev, loading: false, rows: newRows }));
     })();
@@ -244,10 +255,22 @@ const loadServerRows = (dispatch, access_token, page, page_size) =>
     resolve(dispatch(getPasswordsList(access_token, page, page_size)));
   });
 
+const refreshRows = (rowsState) =>
+  new Promise((resolve) => {
+    resolve(rowsState.rows);
+  });
+
 function App() {
   const [loggedIn, setLoggedIn] = useState();
   const user_state = useSelector(state => state.user_state);
   const dispatch = useDispatch();
+
+  const [rowsState, setRowsState] = React.useState({
+    page: 0,
+    pageSize: 10,
+    rows: [],
+    loading: false,
+  });
 
   const columns = [
     { field: 'id', headerName: 'ID', width: 100 },
@@ -266,17 +289,10 @@ function App() {
       headerName: "Action",
       sortable: false,
       renderCell: (params) => {
-        return <AlertDialog entry={params} setRowsState={setRowsState} />;
+        return <AlertDialog entry={params} rowsState={rowsState} setRowsState={setRowsState} />;
       }
     }
   ];
-
-  const [rowsState, setRowsState] = React.useState({
-    page: 0,
-    pageSize: 10,
-    rows: [],
-    loading: false,
-  });
 
   React.useEffect(() => {
   }, []);
