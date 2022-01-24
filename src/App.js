@@ -285,8 +285,8 @@ function App() {
     { field: 'changed', headerName: 'Changed', width: 200 },
     { field: 'created', headerName: 'Created', width: 200 },
     {
-      field: "action",
-      headerName: "Action",
+      field: "actions",
+      headerName: "Actions",
       sortable: false,
       width: 100,
       renderCell: (params) => {

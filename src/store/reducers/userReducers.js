@@ -22,6 +22,24 @@ export default function user_state(state = initialState, action) {
             delete obj.attributes.field_link;
             obj.attributes.field_link = field_link;
             obj.attributes.uuid = obj.id;
+            let changed = new Date(obj.attributes.changed);
+            changed = changed.toLocaleString("en-GB", {
+                day: "numeric",
+                month: "short",
+                year: "numeric",
+                hour: "numeric",
+                minute: "2-digit"
+            });
+            obj.attributes.changed = changed;
+            let created = new Date(obj.attributes.created);
+            created = created.toLocaleString("en-GB", {
+                day: "numeric",
+                month: "short",
+                year: "numeric",
+                hour: "numeric",
+                minute: "2-digit"
+            });
+            obj.attributes.created = created;
             rows.push(obj.attributes);
         });
         return {
