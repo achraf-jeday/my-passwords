@@ -277,3 +277,29 @@ export const updatePasswordAction = (csrf, access_token, fields) => async dispat
         })
     }
 }
+
+export const deletePasswordAction = (csrf, access_token, uuid) => async dispatch => {
+    let config = {
+        headers: {
+            'Content-Type': 'application/vnd.api+json',
+            'Authorization': 'Bearer ' + access_token,
+            'X-CSRF-Token': csrf
+        }
+    }
+
+    axios.defaults.withCredentials = true;
+
+    try {
+        const response = await axios.delete('http://dev.passwordlocker.loc/api/json/password/' + uuid, config);
+        dispatch( {
+            type: actionTypes.DELETE_PASSWORD,
+            payload: response
+        });
+    }
+    catch(e) {
+        dispatch( {
+            type: actionTypes.DELETE_PASSWORD_ERROR,
+            payload: console.log(e),
+        })
+    }
+}

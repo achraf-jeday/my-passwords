@@ -1,7 +1,7 @@
 import React, { useState, useRef, useEffect, useLayoutEffect } from 'react';
 import axios from 'axios';
 import { useDispatch, useSelector } from 'react-redux';
-import { getCSRFToken, getAccessToken, verifyUserPackingKey, getPasswordsList, getPassword, updatePasswordAction } from './store/actions/usersActions';
+import { getCSRFToken, getAccessToken, verifyUserPackingKey, getPasswordsList, getPassword, updatePasswordAction, deletePasswordAction } from './store/actions/usersActions';
 import querystring from 'querystring';
 import StickyFooter from './StickyFooter';
 import SignIn from './SignIn';
@@ -116,7 +116,23 @@ function AlertDialog({entry, rowsState, setRowsState}) {
       );
       setRowsState((prev) => ({ ...prev, loading: false, rows: newRows }));
     })();
+  };
 
+  const deletePassword = async () => {
+    let uuid = entry.getValue(entry.id, 'uuid');
+
+    (async () => {
+      setRowsState((prev) => ({ ...prev, loading: true }));
+      var csrf = await dispatch(getCSRFToken());
+      await dispatch(deletePasswordAction(csrf, user_state.access_token, uuid));
+      const newRows = await loadServerRows(
+        dispatch,
+        user_state.access_token,
+        rowsState.page,
+        rowsState.pageSize,
+      );
+      setRowsState((prev) => ({ ...prev, loading: false, rows: newRows }));
+    })();
   };
 
   const handleClose = () => {
@@ -131,7 +147,7 @@ function AlertDialog({entry, rowsState, setRowsState}) {
         </IconButton>
       </label>
       <label>
-        <IconButton onClick={handleClickOpen} color="primary" aria-label="Edit entry" component="span">
+        <IconButton onClick={deletePassword} color="primary" aria-label="Edit entry" component="span">
           <DeleteForeverIcon />
         </IconButton>
       </label>
