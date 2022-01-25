@@ -268,6 +268,7 @@ export const updatePasswordAction = (csrf, access_token, fields) => async dispat
             type: actionTypes.UPDATE_PASSWORD,
             payload: response
         });
+        return response;
     }
     catch(e) {
         dispatch( {

@@ -90,14 +90,11 @@ function AlertDialog({entry, rowsState, setRowsState}) {
     (async () => {
       setRowsState((prev) => ({ ...prev, loading: true }));
       var csrf = await dispatch(getCSRFToken());
-      await dispatch(updatePasswordAction(csrf, user_state.access_token, fields));
+      var response = await dispatch(updatePasswordAction(csrf, user_state.access_token, fields));
       let target = entry.id % rowsState.pageSize;
       if (target != 0) {
         --target;
       }
-      console.log(entry.id);
-      console.log(rowsState.pageSize);
-      console.log(target);
       rowsState.rows[target].name = fields['name'];
       rowsState.rows[target].field_user_id = fields['user-id'];
       rowsState.rows[target].field_password = fields['password'];
@@ -105,6 +102,15 @@ function AlertDialog({entry, rowsState, setRowsState}) {
       rowsState.rows[target].field_email = fields['email'];
       rowsState.rows[target].metatag = fields['tags'];
       rowsState.rows[target].field_notes = fields['notes'];
+      let changed = new Date(response.data.data.attributes.changed);
+      changed = changed.toLocaleString("en-GB", {
+          day: "numeric",
+          month: "short",
+          year: "numeric",
+          hour: "numeric",
+          minute: "2-digit"
+      });
+      rowsState.rows[target].changed = changed;
       const newRows = await refreshRows(
         rowsState,
       );
