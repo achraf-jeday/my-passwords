@@ -8,7 +8,8 @@ import SignIn from './SignIn';
 import ResponsiveAppBar from './ResponsiveAppBar';
 import './App.css';
 
-import { useDemoData } from '@mui/x-data-grid-generator';
+import Backdrop from '@mui/material/Backdrop';
+import CircularProgress from '@mui/material/CircularProgress';
 
 import CssBaseline from '@mui/material/CssBaseline';
 import Box from '@mui/material/Box';
@@ -47,7 +48,7 @@ import InputAdornment from '@mui/material/InputAdornment';
 import AccountCircle from '@mui/icons-material/AccountCircle';
 import Grid from '@mui/material/Grid';
 
-function AlertDialog({entry, rowsState, setRowsState}) {
+function AlertDialog({entry, rowsState, setRowsState, openBackdrop, setOpenBackdrop}) {
 
   const [name, setName] = useState("");
   const [userId, setUserId] = useState("");
@@ -88,7 +89,7 @@ function AlertDialog({entry, rowsState, setRowsState}) {
     setOpen(false);
 
     (async () => {
-      setRowsState((prev) => ({ ...prev, loading: true }));
+      setOpenBackdrop(true);
       var csrf = await dispatch(getCSRFToken());
       var response = await dispatch(updatePasswordAction(csrf, user_state.access_token, fields));
       let target = entry.id % rowsState.pageSize;
@@ -114,7 +115,8 @@ function AlertDialog({entry, rowsState, setRowsState}) {
       const newRows = await refreshRows(
         rowsState,
       );
-      setRowsState((prev) => ({ ...prev, loading: false, rows: newRows }));
+      setRowsState((prev) => ({ ...prev, rows: newRows }));
+      setOpenBackdrop(false);
     })();
   };
 
@@ -122,7 +124,7 @@ function AlertDialog({entry, rowsState, setRowsState}) {
     let uuid = entry.getValue(entry.id, 'uuid');
 
     (async () => {
-      setRowsState((prev) => ({ ...prev, loading: true }));
+      setOpenBackdrop(true);
       var csrf = await dispatch(getCSRFToken());
       await dispatch(deletePasswordAction(csrf, user_state.access_token, uuid));
       const newRows = await loadServerRows(
@@ -131,7 +133,8 @@ function AlertDialog({entry, rowsState, setRowsState}) {
         rowsState.page,
         rowsState.pageSize,
       );
-      setRowsState((prev) => ({ ...prev, loading: false, rows: newRows }));
+      setRowsState((prev) => ({ ...prev, rows: newRows }));
+      setOpenBackdrop(false);
     })();
   };
 
@@ -286,6 +289,7 @@ function App() {
   const [loggedIn, setLoggedIn] = useState();
   const user_state = useSelector(state => state.user_state);
   const dispatch = useDispatch();
+  const [openBackdrop, setOpenBackdrop] = React.useState(false);
 
   const [rowsState, setRowsState] = React.useState({
     page: 0,
@@ -312,7 +316,13 @@ function App() {
       sortable: false,
       width: 100,
       renderCell: (params) => {
-        return <AlertDialog entry={params} rowsState={rowsState} setRowsState={setRowsState} />;
+        return <AlertDialog
+        entry={params}
+        rowsState={rowsState}
+        setRowsState={setRowsState}
+        openBackdrop={openBackdrop}
+        setOpenBackdrop={setOpenBackdrop}
+      />;
       }
     }
   ];
@@ -328,21 +338,19 @@ function App() {
     }
 
     let active = true;
-
     (async () => {
-      setRowsState((prev) => ({ ...prev, loading: true }));
-
+      setOpenBackdrop(true);
       const newRows = await loadServerRows(
         dispatch,
         user_state.access_token,
         rowsState.page,
         rowsState.pageSize,
       );
-
       if (!active) {
         return;
       }
-      setRowsState((prev) => ({ ...prev, loading: false, rows: newRows }));
+      setRowsState((prev) => ({ ...prev, rows: newRows }));
+      setOpenBackdrop(false);
     })();
 
     return () => {
@@ -357,6 +365,12 @@ function App() {
 
   return (
     <div className = "App" >
+      <Backdrop
+        sx={{ color: '#fff', zIndex: (theme) => theme.zIndex.drawer + 1 }}
+        open={openBackdrop}
+      >
+        <CircularProgress color="inherit" />
+      </Backdrop>
       <React.Fragment>
         <Box
           sx={{
