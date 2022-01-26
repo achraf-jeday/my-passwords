@@ -26,6 +26,7 @@ import Button from '@mui/material/Button';
 import Dialog from '@mui/material/Dialog';
 import DialogActions from '@mui/material/DialogActions';
 import DialogContent from '@mui/material/DialogContent';
+import DialogContentText from '@mui/material/DialogContentText';
 import DialogTitle from '@mui/material/DialogTitle';
 import FormControl from '@mui/material/FormControl';
 import FormControlLabel from '@mui/material/FormControlLabel';
@@ -48,7 +49,13 @@ import InputAdornment from '@mui/material/InputAdornment';
 import AccountCircle from '@mui/icons-material/AccountCircle';
 import Grid from '@mui/material/Grid';
 
-function AlertDialog({entry, rowsState, setRowsState, openBackdrop, setOpenBackdrop}) {
+function AlertDialog({
+  entry,
+  rowsState,
+  setRowsState,
+  openBackdrop,
+  setOpenBackdrop
+}) {
 
   const [name, setName] = useState("");
   const [userId, setUserId] = useState("");
@@ -61,6 +68,15 @@ function AlertDialog({entry, rowsState, setRowsState, openBackdrop, setOpenBackd
   const [open, setOpen] = useState(false);
   const user_state = useSelector(state => state.user_state);
   const dispatch = useDispatch();
+  const [openConfirmation, setOpenConfirmation] = React.useState(false);
+
+  const handleOpenConfirmation = () => {
+    setOpenConfirmation(true);
+  };
+
+  const handleCloseConfirmation = () => {
+    setOpenConfirmation(false);
+  };
 
   const handleClickOpen = async () => {
     try {
@@ -150,7 +166,7 @@ function AlertDialog({entry, rowsState, setRowsState, openBackdrop, setOpenBackd
         </IconButton>
       </label>
       <label>
-        <IconButton onClick={deletePassword} color="primary" aria-label="Edit entry" component="span">
+        <IconButton onClick={handleOpenConfirmation} color="primary" aria-label="Edit entry" component="span">
           <DeleteForeverIcon />
         </IconButton>
       </label>
