@@ -331,6 +331,7 @@ function App() {
   const user_state = useSelector(state => state.user_state);
   const dispatch = useDispatch();
   const [openBackdrop, setOpenBackdrop] = React.useState(false);
+  const [openAddNew, setOpenAddNew] = useState(false);
 
   const [rowsState, setRowsState] = React.useState({
     page: 0,
@@ -338,6 +339,18 @@ function App() {
     rows: [],
     loading: false,
   });
+
+  const createPassword = async event => {
+    event.preventDefault();
+  };
+
+  const handleClickOpenAddNew = () => {
+    setOpenAddNew(true);
+  };
+
+  const handleCloseAddNew = () => {
+    setOpenAddNew(false);
+  };
 
   const columns = [
     { field: 'id', headerName: 'ID', width: 100 },
@@ -422,6 +435,109 @@ function App() {
         >
         <ResponsiveAppBar setLoggedIn={setLoggedIn} />
           <div className="wrapper">
+            <Dialog
+              open={openAddNew}
+              onClose={handleCloseAddNew}
+              aria-labelledby="alert-dialog-title"
+              aria-describedby="alert-dialog-description"
+              fullWidth
+              maxWidth="md"
+            >
+              <Box
+                component="form"
+                onSubmit={createPassword}
+                noValidate
+                autoComplete="off"
+              >
+                <DialogTitle id="alert-dialog-title">
+                  {"Entry Details"}
+                </DialogTitle>
+                <DialogContent>
+                    <br />
+                    <Grid container direction="row" justifyContent="center" alignItems="flex-start">
+                      <Grid container item spacing={2} xs={6} direction={"column"} justifyContent="center" alignItems="center">
+                        <Grid item style={{ width: '90%' }}>
+                          <TextField
+                            fullWidth
+                            id="name"
+                            label="Name"
+                            name="name"
+                            size="small"
+                          />
+                        </Grid>
+                        <Grid item style={{ width: '90%' }}>
+                          <TextField
+                            fullWidth
+                            id="user-id"
+                            label="User ID"
+                            name="user-id"
+                            size="small"
+                          />
+                        </Grid>
+                        <Grid item style={{ width: '90%' }}>
+                          <TextField
+                            fullWidth
+                            id="password"
+                            label="Password"
+                            name="password"
+                            size="small"
+                          />
+                        </Grid>
+                        <Grid item style={{ width: '90%' }}>
+                          <TextField
+                            fullWidth
+                            id="link"
+                            label="Link"
+                            name="link"
+                            size="small"
+                          />
+                        </Grid>
+                        <Grid item style={{ width: '90%' }}>
+                          <TextField
+                            fullWidth
+                            id="email"
+                            label="Email"
+                            name="email"
+                            size="small"
+                          />
+                        </Grid>
+                        <Grid item style={{ width: '90%' }}>
+                          <TextField
+                            fullWidth
+                            id="tags"
+                            label="Tags"
+                            name="tags"
+                            size="small"
+                          />
+                        </Grid>
+                      </Grid>
+                      <Grid container item spacing={2} xs={6} direction={"column"} justifyContent="center" alignItems="center">
+                        <Grid item style={{ width: '90%' }}>
+                          <TextField
+                            fullWidth
+                            id="notes"
+                            label="Notes"
+                            name="notes"
+                            size="small"
+                            multiline
+                            rows={8}
+                          />
+                        </Grid>
+                      </Grid>
+                    </Grid>
+                </DialogContent>
+                <DialogActions>
+                  <Button onClick={handleCloseAddNew}>Cancel</Button>
+                  <Button
+                    type="submit"
+                    variant="contained"
+                    autoFocus
+                  >
+                    OK
+                  </Button>
+                </DialogActions>
+              </Box>
+            </Dialog>
             <br />
             <br />
             <div
@@ -442,8 +558,8 @@ function App() {
                     'margin-bottom': '20px',
                   }}
                 >
-                  <Stack direction="row" spacing={2}>
-                    <Button variant="contained" endIcon={<NoteAddIcon />}>
+                  <Stack direction="row" spacing={2} justifyContent="right">
+                    <Button onClick={handleClickOpenAddNew} variant="contained" endIcon={<NoteAddIcon />}>
                       Add New
                     </Button>
                   </Stack>
