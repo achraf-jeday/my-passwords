@@ -33,6 +33,8 @@ import FormControlLabel from '@mui/material/FormControlLabel';
 import InputLabel from '@mui/material/InputLabel';
 import MenuItem from '@mui/material/MenuItem';
 import Select from '@mui/material/Select';
+import Stack from '@mui/material/Stack';
+import NoteAddIcon from '@mui/icons-material/NoteAdd';
 
 import ListItemText from '@mui/material/ListItemText';
 import ListItem from '@mui/material/ListItem';
@@ -430,10 +432,22 @@ function App() {
             >
               <div
                 style={{
+                    'margin-bottom': '40px',
                     height: 650,
                     width: '90%'
                 }}
               >
+                <div
+                  style={{
+                    'margin-bottom': '20px',
+                  }}
+                >
+                  <Stack direction="row" spacing={2}>
+                    <Button variant="contained" endIcon={<NoteAddIcon />}>
+                      Add New
+                    </Button>
+                  </Stack>
+                </div>
                 <DataGrid
                   columns={columns}
                   pagination
