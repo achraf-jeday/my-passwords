@@ -234,6 +234,49 @@ export const getPassword = (access_token) => async dispatch => {
     }
 }
 
+export const createPasswordAction = (csrf, access_token, fields) => async dispatch => {
+    var data = JSON.stringify({
+        "data": {
+            "type": "password--password",
+            "attributes": {
+                "status": false,
+                "name": fields['name'],
+                "field_email": fields['email'],
+                "field_link": fields['link'],
+                "field_notes": fields['notes'],
+                "field_password": fields['password'],
+                "field_user_id": fields['user-id']
+            }
+        }
+    });
+
+    let config = {
+        headers: {
+            'Accept': 'application/vnd.api+json',
+            'Content-Type': 'application/vnd.api+json',
+            'Authorization': 'Bearer ' + access_token,
+            'X-CSRF-Token': csrf
+        }
+    }
+
+    axios.defaults.withCredentials = true;
+
+    try {
+        const response = await axios.post('http://dev.passwordlocker.loc/api/json/password', data, config);
+        dispatch( {
+            type: actionTypes.CREATE_PASSWORD,
+            payload: response
+        });
+        return response;
+    }
+    catch(e) {
+        dispatch( {
+            type: actionTypes.CREATE_PASSWORD_ERROR,
+            payload: console.log(e),
+        })
+    }
+}
+
 export const updatePasswordAction = (csrf, access_token, fields) => async dispatch => {
     var data = JSON.stringify({
         "data": {

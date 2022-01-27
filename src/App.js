@@ -1,7 +1,16 @@
 import React, { useState, useRef, useEffect, useLayoutEffect } from 'react';
 import axios from 'axios';
 import { useDispatch, useSelector } from 'react-redux';
-import { getCSRFToken, getAccessToken, verifyUserPackingKey, getPasswordsList, getPassword, updatePasswordAction, deletePasswordAction } from './store/actions/usersActions';
+import {
+  getCSRFToken,
+  getAccessToken,
+  verifyUserPackingKey,
+  getPasswordsList,
+  getPassword,
+  updatePasswordAction,
+  deletePasswordAction,
+  createPasswordAction
+} from './store/actions/usersActions';
 import querystring from 'querystring';
 import StickyFooter from './StickyFooter';
 import SignIn from './SignIn';
@@ -342,6 +351,20 @@ function App() {
 
   const createPassword = async event => {
     event.preventDefault();
+    var data = new FormData(event.currentTarget);
+    var fields = [];
+    for (var [key, value] of data.entries()) {
+      fields[key] = value;
+    }
+
+    setOpenAddNew(false);
+
+    (async () => {
+      setOpenBackdrop(true);
+      var csrf = await dispatch(getCSRFToken());
+      var response = await dispatch(createPasswordAction(csrf, user_state.access_token, fields));
+      setOpenBackdrop(false);
+    })();
   };
 
   const handleClickOpenAddNew = () => {
@@ -548,14 +571,14 @@ function App() {
             >
               <div
                 style={{
-                    'margin-bottom': '40px',
+                    'marginBottom': '40px',
                     height: 650,
                     width: '90%'
                 }}
               >
                 <div
                   style={{
-                    'margin-bottom': '20px',
+                    'marginBottom': '20px',
                   }}
                 >
                   <Stack direction="row" spacing={2} justifyContent="right">
