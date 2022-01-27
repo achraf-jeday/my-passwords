@@ -49,6 +49,10 @@ import InputAdornment from '@mui/material/InputAdornment';
 import AccountCircle from '@mui/icons-material/AccountCircle';
 import Grid from '@mui/material/Grid';
 
+const Transition = React.forwardRef(function Transition(props, ref) {
+  return <Slide direction="up" ref={ref} {...props} />;
+});
+
 function AlertDialog({
   entry,
   rowsState,
@@ -70,11 +74,11 @@ function AlertDialog({
   const dispatch = useDispatch();
   const [openConfirmation, setOpenConfirmation] = React.useState(false);
 
-  const handleOpenConfirmation = () => {
+  const handleOpenDeleteConfirmation = () => {
     setOpenConfirmation(true);
   };
 
-  const handleCloseConfirmation = () => {
+  const handleCloseDeleteConfirmation = () => {
     setOpenConfirmation(false);
   };
 
@@ -137,6 +141,7 @@ function AlertDialog({
   };
 
   const deletePassword = async () => {
+    setOpenConfirmation(false);
     let uuid = entry.getValue(entry.id, 'uuid');
 
     (async () => {
@@ -160,13 +165,31 @@ function AlertDialog({
 
   return (
     <div>
+      <Dialog
+        open={openConfirmation}
+        TransitionComponent={Transition}
+        keepMounted
+        onClose={handleClose}
+        aria-describedby="alert-dialog-slide-description"
+      >
+        <DialogTitle>{"Confirm delete action"}</DialogTitle>
+        <DialogContent>
+          <DialogContentText id="alert-dialog-slide-description">
+            Are you sure you want to delete '{entry.getValue(entry.id, 'name')}'?
+          </DialogContentText>
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={handleCloseDeleteConfirmation}>No</Button>
+          <Button onClick={deletePassword}>Yes</Button>
+        </DialogActions>
+      </Dialog>
       <label>
         <IconButton onClick={handleClickOpen} color="primary" aria-label="Edit entry" component="span">
           <EditIcon />
         </IconButton>
       </label>
       <label>
-        <IconButton onClick={handleOpenConfirmation} color="primary" aria-label="Edit entry" component="span">
+        <IconButton onClick={handleOpenDeleteConfirmation} color="primary" aria-label="Edit entry" component="span">
           <DeleteForeverIcon />
         </IconButton>
       </label>
