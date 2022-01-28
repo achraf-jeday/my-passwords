@@ -69,7 +69,8 @@ function AlertDialog({
   rowsState,
   setRowsState,
   openBackdrop,
-  setOpenBackdrop
+  setOpenBackdrop,
+  testFunc
 }) {
 
   const [name, setName] = useState("");
@@ -146,7 +147,8 @@ function AlertDialog({
       // const newRows = await refreshRows(
       //   rowsState,
       // );
-      setRowsState((prev) => ({ ...prev, rows: rowsState.rows }));
+      testFunc(rowsState.rows);
+      // setRowsState((prev) => ({ ...prev, rows: rowsState.rows }));
       setOpenBackdrop(false);
     })();
   };
@@ -349,6 +351,10 @@ function App() {
     loading: false,
   });
 
+  const test = (newRows) => {
+    setRowsState((prev) => ({ ...prev, rows: newRows }));
+  };
+
   const createPassword = async event => {
     event.preventDefault();
     var data = new FormData(event.currentTarget);
@@ -399,6 +405,7 @@ function App() {
         setRowsState={setRowsState}
         openBackdrop={openBackdrop}
         setOpenBackdrop={setOpenBackdrop}
+        testFunc={test}
       />;
       }
     }
