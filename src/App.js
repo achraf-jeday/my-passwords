@@ -69,8 +69,7 @@ function AlertDialog({
   rowsState,
   setRowsState,
   openBackdrop,
-  setOpenBackdrop,
-  testFunc
+  setOpenBackdrop
 }) {
 
   const [name, setName] = useState("");
@@ -124,10 +123,8 @@ function AlertDialog({
       setOpenBackdrop(true);
       var csrf = await dispatch(getCSRFToken());
       var response = await dispatch(updatePasswordAction(csrf, user_state.access_token, fields));
-      let target = entry.id % rowsState.pageSize;
-      if (target != 0) {
-        --target;
-      }
+      let target = entry.row.index;
+      --target;
       rowsState.rows[target].name = fields['name'];
       rowsState.rows[target].field_user_id = fields['user-id'];
       rowsState.rows[target].field_password = fields['password'];
@@ -144,11 +141,10 @@ function AlertDialog({
           minute: "2-digit"
       });
       rowsState.rows[target].changed = changed;
-      // const newRows = await refreshRows(
-      //   rowsState,
-      // );
-      testFunc(rowsState.rows);
-      // setRowsState((prev) => ({ ...prev, rows: rowsState.rows }));
+      const newRows = await refreshRows(
+        rowsState,
+      );
+      setRowsState((prev) => ({ ...prev, rows: newRows }));
       setOpenBackdrop(false);
     })();
   };
@@ -351,10 +347,6 @@ function App() {
     loading: false,
   });
 
-  const test = (newRows) => {
-    setRowsState((prev) => ({ ...prev, rows: newRows }));
-  };
-
   const createPassword = async event => {
     event.preventDefault();
     var data = new FormData(event.currentTarget);
@@ -405,7 +397,6 @@ function App() {
         setRowsState={setRowsState}
         openBackdrop={openBackdrop}
         setOpenBackdrop={setOpenBackdrop}
-        testFunc={test}
       />;
       }
     }

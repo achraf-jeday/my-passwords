@@ -15,6 +15,7 @@ export default function user_state(state = initialState, action) {
         }
         case actionTypes.GET_PASSWORDS:
         var rows = [];
+        let index = 0;
         action.payload.data.data.forEach(obj => {
             obj.attributes.id = obj.attributes.drupal_internal__id;
             delete obj.attributes.drupal_internal__id;
@@ -40,6 +41,7 @@ export default function user_state(state = initialState, action) {
                 minute: "2-digit"
             });
             obj.attributes.created = created;
+            obj.attributes.index = ++index;
             rows.push(obj.attributes);
         });
         return {
