@@ -143,10 +143,10 @@ function AlertDialog({
           minute: "2-digit"
       });
       rowsState.rows[target].changed = changed;
-      const newRows = await refreshRows(
-        rowsState,
-      );
-      setRowsState((prev) => ({ ...prev, rows: newRows }));
+      // const newRows = await refreshRows(
+      //   rowsState,
+      // );
+      setRowsState((prev) => ({ ...prev, rows: rowsState.rows }));
       setOpenBackdrop(false);
     })();
   };
