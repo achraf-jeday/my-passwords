@@ -24,7 +24,9 @@ import CssBaseline from '@mui/material/CssBaseline';
 import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
 import Container from '@mui/material/Container';
-import { DataGrid, GridColDef, GridApi, GridCellValue } from '@mui/x-data-grid';
+import Pagination from '@mui/material/Pagination';
+import { DataGrid, GridColDef, GridApi, useGridApiContext, GridCellValue, useGridState } from '@mui/x-data-grid';
+import { createTheme, ThemeProvider } from '@mui/material/styles';
 
 import { styled } from '@mui/material/styles';
 import IconButton from '@mui/material/IconButton';
@@ -323,6 +325,30 @@ function AlertDialog({
   );
 }
 
+const theme = createTheme({
+    palette: {
+      secondary: {
+        main: '#292929',
+      }
+    },
+});
+
+function CustomPagination() {
+  const apiRef = useGridApiContext();
+  const [state] = useGridState(apiRef);
+
+  return (
+    <ThemeProvider theme={theme}>
+        <Pagination
+        color="secondary"
+        count={state.pagination.pageCount}
+        page={state.pagination.page + 1}
+        onChange={(event, value) => apiRef.current.setPage(value - 1)}
+        />
+    </ThemeProvider>
+  );
+}
+
 const loadServerRows = (dispatch, access_token, page, page_size) =>
   new Promise((resolve) => {
     resolve(dispatch(getPasswordsList(access_token, page, page_size)));
@@ -588,14 +614,15 @@ function App() {
                 <DataGrid
                   columns={columns}
                   pagination
-                  rowsPerPageOptions={[10, 25, 50, 100]}
+                  components={{
+                    Pagination: CustomPagination,
+                  }}
                   rowCount={parseInt(user_state.count, 10)}
                   {...rowsState}
                   paginationMode="server"
                   onPageChange={(page) => setRowsState((prev) => ({ ...prev, page }))}
-                  onPageSizeChange={(pageSize) =>
-                    setRowsState((prev) => ({ ...prev, pageSize }))
-                  }
+                  disableColumnMenu
+                  disableSelectionOnClick
                 />
               </div>
             </div>
