@@ -220,7 +220,7 @@ export const getPasswordsList = (access_token, page, page_size) => async dispatc
     let offset = page * page_size;
 
     try {
-        const response = await axios.get('http://dev.passwordlocker.loc/api/json/password?page[limit]=' + page_size + '&page[offset]=' + offset, config);
+        const response = await axios.get('http://dev.passwordlocker.loc/api/json/password?filter[user_id.meta.drupal_internal__target_id][value]=15&page[limit]=' + page_size + '&page[offset]=' + offset, config);
         dispatch( {
             type: actionTypes.GET_PASSWORDS,
             payload: response
