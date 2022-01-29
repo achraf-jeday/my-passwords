@@ -15,7 +15,7 @@ import Typography from '@mui/material/Typography';
 import Container from '@mui/material/Container';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import Copyright from './Copyright';
-import { resetPass } from './store/actions/usersActions';
+import { resetPass, getAccessToken, updateUserPackingKey } from './store/actions/usersActions';
 import PropTypes from 'prop-types';
 
 const theme = createTheme();
@@ -27,12 +27,15 @@ export function SetPassword() {
 
   const [searchParams, setSearchParams] = useSearchParams();
   var name = searchParams.get("name")
-  var pass = searchParams.get("pass")
+  var password = searchParams.get("pass")
 
   const handleSubmit = async event => {
     event.preventDefault();
     const data = new FormData(event.currentTarget);
-    await dispatch(resetPass(name, pass, data.get('password')));
+    let new_password = data.get('password');
+    await dispatch(resetPass(name, password, new_password));
+    var access_token = await dispatch(getAccessToken(name, new_password));
+    await dispatch(updateUserPackingKey(access_token));
     navigate("/", { replace: true });
   };
 

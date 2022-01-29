@@ -55,6 +55,36 @@ export const getCSRFToken = () => async dispatch => {
 
 }
 
+export const updateUserPackingKey = (access_token) => async dispatch => {
+    const data = JSON.stringify({
+        "packing_key": {
+            "existing": "SuperSecret123!",
+            "value": "SuperSecret123!"
+        }
+    });
+
+    let config = {
+        headers: {
+            'Content-type': 'application/json',
+            'Authorization': 'Bearer ' + access_token
+        }
+    }
+
+    try {
+        const response = await axios.patch(`http://dev.passwordlocker.loc/user/packing-key?_format=json`, data, config);
+        dispatch( {
+            type: actionTypes.UPDATE_PACKING_KEY,
+            payload: response
+        });
+    }
+    catch(e) {
+        dispatch( {
+            type: actionTypes.UPDATE_PACKING_KEY_ERROR,
+            payload: console.log(e),
+        })
+    }
+}
+
 export const verifyUserPackingKey = (csrf, access_token) => async dispatch => {
     const data = JSON.stringify({
         "packing_key": "SuperSecret123!"
