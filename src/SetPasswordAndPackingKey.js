@@ -20,7 +20,7 @@ import PropTypes from 'prop-types';
 
 const theme = createTheme();
 
-export function SetPassword() {
+export function SetPasswordAndPackingKey() {
 
   const dispatch = useDispatch();
   let navigate = useNavigate();
@@ -33,9 +33,13 @@ export function SetPassword() {
     event.preventDefault();
     const data = new FormData(event.currentTarget);
     let new_password = data.get('password');
+    let packing_key = data.get('packing-key');
+    // Set password.
     await dispatch(resetPass(name, password, new_password));
+    // Get access token.
     var access_token = await dispatch(getAccessToken(name, new_password));
-    await dispatch(updateUserPackingKey(access_token));
+    // Set packing key.
+    await dispatch(updateUserPackingKey(access_token, packing_key));
     navigate("/", { replace: true });
   };
 
@@ -134,4 +138,4 @@ export function SetPassword() {
 
 const mapStateToProps  = (state) => ({user_state:state.user_state})
 
-export default connect(mapStateToProps)(SetPassword)
+export default connect(mapStateToProps)(SetPasswordAndPackingKey)

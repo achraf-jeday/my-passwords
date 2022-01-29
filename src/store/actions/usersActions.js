@@ -55,11 +55,11 @@ export const getCSRFToken = () => async dispatch => {
 
 }
 
-export const updateUserPackingKey = (access_token) => async dispatch => {
+export const updateUserPackingKey = (access_token, packing_key) => async dispatch => {
     const data = JSON.stringify({
         "packing_key": {
             "existing": "SuperSecret123!",
-            "value": "SuperSecret123!"
+            "value": packing_key
         }
     });
 
