@@ -208,7 +208,7 @@ export const resetPass = (name, temp_pass, new_pass) => async dispatch => {
 
 }
 
-export const getPasswordsList = (access_token, page, page_size) => async dispatch => {
+export const getPasswordsList = (access_token, name, page, page_size) => async dispatch => {
     let config = {
         headers: {
             'Authorization': 'Bearer ' + access_token
@@ -220,7 +220,7 @@ export const getPasswordsList = (access_token, page, page_size) => async dispatc
     let offset = page * page_size;
 
     try {
-        const response = await axios.get('http://dev.passwordlocker.loc/api/json/password?filter[user_id.name][value]=achraf-test&filter[status][value]=0&page[limit]=' + page_size + '&page[offset]=' + offset, config);
+        const response = await axios.get('http://dev.passwordlocker.loc/api/json/password?filter[user_id.name][value]=' + name + '&filter[status][value]=0&page[limit]=' + page_size + '&page[offset]=' + offset, config);
         dispatch( {
             type: actionTypes.GET_PASSWORDS,
             payload: response

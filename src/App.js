@@ -349,9 +349,9 @@ function CustomPagination() {
   );
 }
 
-const loadServerRows = (dispatch, access_token, page, page_size) =>
+const loadServerRows = (dispatch, access_token, name, page, page_size) =>
   new Promise((resolve) => {
-    resolve(dispatch(getPasswordsList(access_token, page, page_size)));
+    resolve(dispatch(getPasswordsList(access_token, name, page, page_size)));
   });
 
 const refreshRows = (rowsState) =>
@@ -361,6 +361,7 @@ const refreshRows = (rowsState) =>
 
 function App() {
   const [loggedIn, setLoggedIn] = useState();
+  const [name, setName] = useState();
   const user_state = useSelector(state => state.user_state);
   const dispatch = useDispatch();
   const [openBackdrop, setOpenBackdrop] = React.useState(false);
@@ -444,6 +445,7 @@ function App() {
       const newRows = await loadServerRows(
         dispatch,
         user_state.access_token,
+        name,
         rowsState.page,
         rowsState.pageSize,
       );
@@ -461,7 +463,7 @@ function App() {
   }, [rowsState.page, rowsState.pageSize]);
 
   if(!loggedIn) {
-    return <SignIn setLoggedIn={setLoggedIn} setRowsState={setRowsState} />
+    return <SignIn setLoggedIn={setLoggedIn} setName={setName} setRowsState={setRowsState} />
   }
 
   return (
