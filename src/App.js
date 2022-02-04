@@ -72,10 +72,11 @@ function AlertDialog({
   setRowsState,
   openBackdrop,
   setOpenBackdrop,
-  LoginName
+  name,
+  setName
 }) {
 
-  const [name, setName] = useState("");
+  const [passwordName, setPasswordName] = useState("");
   const [userId, setUserId] = useState("");
   const [password, setPassword] = useState("");
   const [link, setLink] = useState("");
@@ -163,7 +164,7 @@ function AlertDialog({
       const newRows = await loadServerRows(
         dispatch,
         user_state.access_token,
-        LoginName,
+        name,
         rowsState.page,
         rowsState.pageSize,
       );
@@ -234,8 +235,8 @@ function AlertDialog({
                       label="Name"
                       name="name"
                       size="small"
-                      value={name}
-                      onChange={e => setName(e.target.value)}
+                      value={passwordName}
+                      onChange={e => setPasswordName(e.target.value)}
                     />
                   </Grid>
                   <Grid item style={{ width: '90%' }}>
@@ -427,6 +428,7 @@ function App() {
         openBackdrop={openBackdrop}
         setOpenBackdrop={setOpenBackdrop}
         name={name}
+        setName={setName}
       />;
       }
     }
