@@ -71,7 +71,8 @@ function AlertDialog({
   rowsState,
   setRowsState,
   openBackdrop,
-  setOpenBackdrop
+  setOpenBackdrop,
+  LoginName
 }) {
 
   const [name, setName] = useState("");
@@ -162,6 +163,7 @@ function AlertDialog({
       const newRows = await loadServerRows(
         dispatch,
         user_state.access_token,
+        LoginName,
         rowsState.page,
         rowsState.pageSize,
       );
@@ -424,6 +426,7 @@ function App() {
         setRowsState={setRowsState}
         openBackdrop={openBackdrop}
         setOpenBackdrop={setOpenBackdrop}
+        name={name}
       />;
       }
     }
