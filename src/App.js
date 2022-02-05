@@ -99,7 +99,7 @@ function AlertDialog({
 
   const handleClickOpen = async () => {
     try {
-      setName(entry.getValue(entry.id, 'name') ?? '');
+      setPasswordName(entry.getValue(entry.id, 'name') ?? '');
       setUserId(entry.getValue(entry.id, 'field_user_id') ?? '');
       setPassword(entry.getValue(entry.id, 'field_password') ?? '');
       setLink(entry.getValue(entry.id, 'field_link') ?? '');
