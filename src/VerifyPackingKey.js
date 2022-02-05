@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useDispatch, useSelector, connect } from 'react-redux';
 import PropTypes from 'prop-types';
-import { getCSRFToken, getAccessToken, getPasswordsList } from './store/actions/usersActions';
+import { getCSRFToken, getAccessToken, verifyUserPackingKey, getPasswordsList } from './store/actions/usersActions';
 import Copyright from './Copyright';
 
 import axios from 'axios';
@@ -23,18 +23,17 @@ import { createTheme, ThemeProvider } from '@mui/material/styles';
 
 const theme = createTheme();
 
-export function SignIn({ setLoggedIn, setName, savePassword }) {
-  const [username, setUserName] = useState();
-  const [password, setPassword] = useState();
+export function VerifyPackingKey({ savePackingKey, name, setRowsState }) {
+  const [packingKey, setPackingKey] = useState();
   const dispatch = useDispatch();
+  const user_state = useSelector(state => state.user_state);
   const handleSubmit = async event => {
     event.preventDefault();
     const data = new FormData(event.currentTarget);
-    await dispatch(getCSRFToken());
-    await dispatch(getAccessToken(data.get('email'), data.get('password')));
-    setLoggedIn(true);
-    setName(data.get('email'));
-    savePassword(data.get('password'));
+    await dispatch(verifyUserPackingKey(data.get('packing-key'), user_state.csrf, user_state.access_token));
+    let newRows = await dispatch(getPasswordsList(user_state.access_token, name, 0, 10));
+    savePackingKey(true);
+    setRowsState((prev) => ({ ...prev, rows: newRows }));
   }
 
   return (
@@ -60,23 +59,12 @@ export function SignIn({ setLoggedIn, setName, savePassword }) {
               margin="normal"
               required
               fullWidth
-              id="email"
-              label="Email Address"
-              name="email"
-              autoComplete="email"
-              autoFocus
-              onChange={e => setUserName(e.target.value)}
-            />
-            <TextField
-              margin="normal"
-              required
-              fullWidth
-              name="password"
-              label="Password"
+              name="packing-key"
+              label="Packing key"
               type="password"
-              id="password"
-              autoComplete="current-password"
-              onChange={e => setPassword(e.target.value)}
+              id="packing-key"
+              autoComplete="current-packing-key"
+              onChange={e => setPackingKey(e.target.value)}
             />
             <FormControlLabel
               control={<Checkbox value="remember" color="primary" />}
@@ -112,8 +100,8 @@ export function SignIn({ setLoggedIn, setName, savePassword }) {
 
 const mapStateToProps  = (state) => ({user_state:state.user_state})
 
-export default connect(mapStateToProps)(SignIn)
+export default connect(mapStateToProps)(VerifyPackingKey)
 
-SignIn.propTypes = {
-  setLoggedIn: PropTypes.func.isRequired
+VerifyPackingKey.propTypes = {
+  savePackingKey: PropTypes.func.isRequired
 }

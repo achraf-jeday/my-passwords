@@ -4,7 +4,6 @@ import { useDispatch, useSelector } from 'react-redux';
 import {
   getCSRFToken,
   getAccessToken,
-  verifyUserPackingKey,
   getPasswordsList,
   getPassword,
   updatePasswordAction,
@@ -14,6 +13,7 @@ import {
 import querystring from 'querystring';
 import StickyFooter from './StickyFooter';
 import SignIn from './SignIn';
+import VerifyPackingKey from './VerifyPackingKey';
 import ResponsiveAppBar from './ResponsiveAppBar';
 import './App.css';
 
@@ -364,7 +364,9 @@ const refreshRows = (rowsState) =>
 
 function App() {
   const [loggedIn, setLoggedIn] = useState();
+  const [packingKey, setPackingKey] = useState();
   const [name, setName] = useState();
+  const [password, setPassword] = useState();
   const user_state = useSelector(state => state.user_state);
   const dispatch = useDispatch();
   const [openBackdrop, setOpenBackdrop] = React.useState(false);
@@ -468,7 +470,11 @@ function App() {
   }, [rowsState.page, rowsState.pageSize]);
 
   if(!loggedIn) {
-    return <SignIn setLoggedIn={setLoggedIn} setName={setName} setRowsState={setRowsState} />
+    return <SignIn setLoggedIn={setLoggedIn} setName={setName} savePassword={setPassword} />
+  }
+
+  if(!packingKey) {
+    return <VerifyPackingKey savePackingKey={setPackingKey} name={name} setRowsState={setRowsState} />
   }
 
   return (

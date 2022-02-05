@@ -2,6 +2,7 @@ import * as actionTypes from '../actionTypes';
 
 const initialState = {
     access_token:'',
+    csrf:'',
     rows: '',
     count: ''
 }
@@ -12,6 +13,11 @@ export default function user_state(state = initialState, action) {
         return {
             ...state,
             access_token:action.payload
+        }
+        case actionTypes.GET_CSRF_TOKEN:
+        return {
+            ...state,
+            csrf:action.payload
         }
         case actionTypes.GET_PASSWORDS:
         var rows = [];
