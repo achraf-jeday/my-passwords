@@ -14,7 +14,7 @@ export const getAccessToken = (email, password) => async dispatch => {
     };
 
     try {
-        const response = await axios.post(process.env.REACT_APP_BASE_URL + `oauth/token`, querystring.stringify(data));
+        const response = await axios.post(process.env.REACT_APP_API_BASE_URL + `oauth/token`, querystring.stringify(data));
         dispatch({
             type: actionTypes.GET_TOKEN,
             payload: response.data.access_token
@@ -39,7 +39,7 @@ export const deleteAccessToken = () => async dispatch => {
 export const getCSRFToken = () => async dispatch => {
 
     try {
-        const response = await axios.get(process.env.REACT_APP_BASE_URL + `session/token`);
+        const response = await axios.get(process.env.REACT_APP_API_BASE_URL + `session/token`);
         dispatch( {
             type: actionTypes.GET_CSRF_TOKEN,
             payload: response.data
@@ -71,7 +71,7 @@ export const updateUserPackingKey = (access_token, packing_key) => async dispatc
     }
 
     try {
-        const response = await axios.patch(process.env.REACT_APP_BASE_URL + `user/packing-key?_format=json`, data, config);
+        const response = await axios.patch(process.env.REACT_APP_API_BASE_URL + `user/packing-key?_format=json`, data, config);
         dispatch( {
             type: actionTypes.UPDATE_PACKING_KEY,
             payload: response
@@ -99,7 +99,7 @@ export const verifyUserPackingKey = (packing_key, csrf, access_token) => async d
     }
 
     try {
-        const response = await axios.post(process.env.REACT_APP_BASE_URL + `user/packing-key?_format=json`, data, config);
+        const response = await axios.post(process.env.REACT_APP_API_BASE_URL + `user/packing-key?_format=json`, data, config);
         dispatch( {
             type: actionTypes.VERIFY_PACKING_KEY,
             payload: response
@@ -135,7 +135,7 @@ export const registerUser = (name, mail, csrf) => async dispatch => {
     }
 
     try {
-        const response = await axios.post(process.env.REACT_APP_BASE_URL + `user/register?_format=json`, data, config);
+        const response = await axios.post(process.env.REACT_APP_API_BASE_URL + `user/register?_format=json`, data, config);
         dispatch( {
             type: actionTypes.REGISTER,
             payload: response
@@ -163,7 +163,7 @@ export const registerEmail = (mail) => async dispatch => {
     }
 
     try {
-        const response = await axios.post(process.env.REACT_APP_BASE_URL + `user/lost-password?_format=json`, data, config);
+        const response = await axios.post(process.env.REACT_APP_API_BASE_URL + `user/lost-password?_format=json`, data, config);
         dispatch( {
             type: actionTypes.REGISTER_EMAIL,
             payload: response
@@ -193,7 +193,7 @@ export const resetPass = (name, temp_pass, new_pass) => async dispatch => {
     }
 
     try {
-        const response = await axios.post(process.env.REACT_APP_BASE_URL + `user/lost-password-reset?_format=json`, data, config);
+        const response = await axios.post(process.env.REACT_APP_API_BASE_URL + `user/lost-password-reset?_format=json`, data, config);
         dispatch( {
             type: actionTypes.RESET_PASSWORD,
             payload: response
@@ -220,7 +220,7 @@ export const getPasswordsList = (access_token, name, page, page_size) => async d
     let offset = page * page_size;
 
     try {
-        const response = await axios.get(process.env.REACT_APP_BASE_URL + 'api/json/password?filter[user_id.name][value]=' + name + '&filter[status][value]=0&page[limit]=' + page_size + '&page[offset]=' + offset, config);
+        const response = await axios.get(process.env.REACT_APP_API_BASE_URL + 'api/json/password?filter[user_id.name][value]=' + name + '&filter[status][value]=0&page[limit]=' + page_size + '&page[offset]=' + offset, config);
         dispatch( {
             type: actionTypes.GET_PASSWORDS,
             payload: response
@@ -249,7 +249,7 @@ export const getPassword = (access_token) => async dispatch => {
     axios.defaults.withCredentials = true;
 
     try {
-        const response = await axios.get(process.env.REACT_APP_BASE_URL + 'api/json/password/ff585b43-a81d-456b-978c-c10100f32a19', config);
+        const response = await axios.get(process.env.REACT_APP_API_BASE_URL + 'api/json/password/ff585b43-a81d-456b-978c-c10100f32a19', config);
         dispatch( {
             type: actionTypes.GET_PASSWORD,
             payload: response
@@ -292,7 +292,7 @@ export const createPasswordAction = (csrf, access_token, fields) => async dispat
     axios.defaults.withCredentials = true;
 
     try {
-        const response = await axios.post(process.env.REACT_APP_BASE_URL + 'api/json/password', data, config);
+        const response = await axios.post(process.env.REACT_APP_API_BASE_URL + 'api/json/password', data, config);
         dispatch( {
             type: actionTypes.CREATE_PASSWORD,
             payload: response
@@ -336,7 +336,7 @@ export const updatePasswordAction = (csrf, access_token, fields) => async dispat
     axios.defaults.withCredentials = true;
 
     try {
-        const response = await axios.patch(process.env.REACT_APP_BASE_URL + 'api/json/password/' + fields['uuid'], data, config);
+        const response = await axios.patch(process.env.REACT_APP_API_BASE_URL + 'api/json/password/' + fields['uuid'], data, config);
         dispatch( {
             type: actionTypes.UPDATE_PASSWORD,
             payload: response
@@ -363,7 +363,7 @@ export const deletePasswordAction = (csrf, access_token, uuid) => async dispatch
     axios.defaults.withCredentials = true;
 
     try {
-        const response = await axios.delete(process.env.REACT_APP_BASE_URL + 'api/json/password/' + uuid, config);
+        const response = await axios.delete(process.env.REACT_APP_API_BASE_URL + 'api/json/password/' + uuid, config);
         dispatch( {
             type: actionTypes.DELETE_PASSWORD,
             payload: response
