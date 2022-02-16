@@ -25,6 +25,7 @@ import PropTypes from 'prop-types';
 const theme = createTheme();
 
 export default function ResetPassword() {
+  const [username, setUserName] = useState();
   const handleSubmit = (event) => {
     event.preventDefault();
     const data = new FormData(event.currentTarget);
