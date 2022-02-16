@@ -5,7 +5,7 @@ export default function Copyright(props) {
   return (
     <Typography variant="body2" color="text.secondary" align="center" {...props}>
       {'Copyright © '}
-      <Link color="inherit" href="https://www.passwordlocker.me/">
+      <Link color="inherit" href="https://www." + process.env.REACT_APP_BASE_URL + "/">
         Password Locker
       </Link>{' '}
       {new Date().getFullYear()}
